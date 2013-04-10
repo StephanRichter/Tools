@@ -816,6 +816,8 @@ public class Tools {
 	}
 
 	public static boolean fileIsKeggUrl(URL fileUrl) {
-		return fileUrl.toString().startsWith("http://www.genome.jp/dbget-bin");
+		String dummy=fileUrl.toString();
+		if (dummy.startsWith("http://rest.kegg.jp/get/")) return true;
+		return dummy.startsWith("http://www.genome.jp/dbget-bin");
 	}
 }
