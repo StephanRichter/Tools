@@ -20,7 +20,7 @@ public class PrefixTree implements Collection<String> {
 		this.ignoreCase=ignoreCase;
 	}
 
-	public boolean add(String s) {
+	private boolean internAdd(String s) {
 		if (s==null) return false;
 		if (s.length()<1) return false;
 		size=-1;
@@ -28,7 +28,7 @@ public class PrefixTree implements Collection<String> {
 		char c=s.charAt(0);
 		PrefixTree subtree = collection.get(c);
 		if (subtree==null) subtree=new PrefixTree();
-		subtree.add(s.substring(1));
+		subtree.internAdd(s.substring(1));
 		collection.put(c, subtree);
 		return true;
 	}
@@ -36,7 +36,7 @@ public class PrefixTree implements Collection<String> {
 	@Override
 	public boolean addAll(Collection<? extends String> strings) {
 		for (String s:strings){
-			if (!add(s)) return false;
+			if (!internAdd(s)) return false;
 		}
 		return true;
 	}
@@ -167,4 +167,12 @@ public class PrefixTree implements Collection<String> {
 		System.out.println(tree.get(""));
 		System.out.println(tree.get("e"));
 	} //*/
+
+	@Override
+	public boolean add(String s) {		
+		if (s==null) return false;
+		if (s.length()<1) return false;
+		if (!s.endsWith(" ")) s=s+" ";
+		return internAdd(s);
+	}
 }

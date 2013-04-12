@@ -58,7 +58,8 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	@Override
 	public void keyReleased(KeyEvent e) {
 		//System.out.println("keyReleased in "+e.getSource().getClass().getSimpleName());
-		switch (e.getKeyCode()){
+		int c = e.getKeyCode();
+		switch (c){
 		case 38:
 			suggestionList.requestFocus();
 			selectionIndex--;
@@ -71,8 +72,12 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 			if (selectionIndex==suggestions.size()) selectionIndex=0;
 			//System.out.println(selectionIndex);
 			return;
-		case 32:
-			useSuggestion();
+		case ' ':
+		case '-':
+		case ',':
+		case '.':
+			useSuggestion((char)c);
+			break;
 		}
 		String text=getText();
 		if (text!=null && text.length()>0){
@@ -90,7 +95,16 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		boolean changed=true;
 		while (changed){
 			changed=false;
-			if (lastWord.endsWith("?") || lastWord.endsWith("!") || lastWord.endsWith(".") || lastWord.endsWith(",") || lastWord.endsWith(";") || lastWord.endsWith(":")) {
+			if (lastWord.endsWith("\\n")) lastWord=lastWord.substring(0,lastWord.length()-2);
+			if (lastWord.endsWith("?") ||
+					lastWord.endsWith("!") ||
+					lastWord.endsWith(".") ||
+					lastWord.endsWith(",") ||
+					lastWord.endsWith(";") ||
+					lastWord.endsWith(":") ||
+					lastWord.endsWith(")") ||
+					lastWord.endsWith("]") ||
+					lastWord.endsWith("}")) {
 				lastWord=lastWord.substring(0, lastWord.length()-1);
 				changed=true;
 			}
@@ -99,12 +113,13 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		return lastWord;
 	}
 
-	private void useSuggestion() {
+	private void useSuggestion(char c) {
 		if (!suggestionList.isVisible()) return;
 		if (selectionIndex>-1){
-			String text=getText().trim();
+			String text=getText();
+			text=text.substring(0, text.length()-1);
 			int len=lastWord(text).length();
-			setText(text+suggestions.get(selectionIndex).substring(len)+" ");
+			setText(text+suggestions.get(selectionIndex).substring(len)+c);
 			hidePopup();
 		}
 	}
@@ -123,8 +138,17 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	}
 
 	private void suggestFor(String text) {
-		if (text.length()<3) return;
+		int len=text.length();
 		suggestions = dictionary.get(text);
+		for (int i=0; i<suggestions.size(); i++){
+			String suggestion = suggestions.get(i).trim();
+			suggestions.remove(i);
+			if (suggestion.length()<len+4 || i>10) {
+				i--;
+			} else {
+				suggestions.insertElementAt(suggestion.trim(), i);
+			}
+		}
 		if (suggestions.isEmpty()){
 			hidePopup();
 		} else {
