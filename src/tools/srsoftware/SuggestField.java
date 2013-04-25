@@ -6,11 +6,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Vector;
 
 import javax.swing.JMenuItem;
@@ -20,8 +22,9 @@ import javax.swing.JTextField;
 
 public class SuggestField extends JTextField implements KeyListener, ActionListener{
 	
+  private static final long serialVersionUID = 4183066803864491291L;
 	private static PrefixTree dictionary=null;
-	private static Path dictionaryFile=Paths.get(System.getProperty("user.home")+"/.config/dictionary");
+	private static File dictionaryFile=new File(System.getProperty("user.home")+"/.config/dictionary");
 	private static Charset charset =Charset.forName("UTF-8");
 	private JPopupMenu suggestionList;
 	private int selectionIndex=-1;
@@ -43,8 +46,8 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 
 	private void loadSuggestions(boolean ignoreCase) throws IOException {
 		dictionary=new PrefixTree(ignoreCase);
-		if (Files.exists(dictionaryFile)){
-			BufferedReader br = Files.newBufferedReader(dictionaryFile, charset );
+		if (dictionaryFile.exists()){
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charset));
 	    String line = null;
 	    while ((line = br.readLine()) != null) dictionary.add(line);
 	    br.close();
@@ -171,7 +174,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	
 	public static void save() throws IOException {
 		if (dictionary==null) return;
-		BufferedWriter bw = Files.newBufferedWriter(dictionaryFile, charset);
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dictionaryFile), charset));
 		for (String line:dictionary.getAll()){
 			bw.write(line+"\n");
 		}
