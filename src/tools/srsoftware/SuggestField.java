@@ -70,13 +70,13 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 			suggestionList.requestFocus();
 			selectionIndex--;
 			if (selectionIndex<0) selectionIndex=suggestions.size()-1;
-			//System.out.println(selectionIndex);
+//			System.out.println(selectionIndex);
 			return;
 		case 40:
 			suggestionList.requestFocus();
 			selectionIndex++;
 			if (selectionIndex==suggestions.size()) selectionIndex=0;
-			//System.out.println(selectionIndex);
+//			System.out.println(selectionIndex);
 			return;
 		case ' ':
 		case '-':
@@ -150,10 +150,8 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		TreeMap<Integer,Vector<String>> map=new TreeMap<Integer, Vector<String>>(); // maps from lengths l to suggestions with length l
 		suggestions = dictionary.get(text);
 		int minLength=text.length()+1;
-		System.out.println("------------");
 		for (String suggestion:suggestions){
 			suggestion=suggestion.trim();
-			System.out.println("<"+suggestion+">");
 			int len=suggestion.length();
 			if (len<minLength) continue;
 			Vector<String> list = map.get(len);
