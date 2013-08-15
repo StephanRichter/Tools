@@ -820,4 +820,8 @@ public class Tools {
 		if (dummy.startsWith("http://rest.kegg.jp/get/")) return true;
 		return dummy.startsWith("http://www.genome.jp/dbget-bin");
 	}
+
+	public static TreeSet<String> stringSet() {
+		return new TreeSet<String>(ObjectComparator.get());
+	}
 }
