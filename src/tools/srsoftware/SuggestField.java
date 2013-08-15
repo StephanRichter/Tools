@@ -124,8 +124,11 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		if (selectionIndex>-1){
 			String text=getText();
 			text=text.substring(0, text.length()-1);
+			System.out.println("Text: '"+text+"'");
 			int len=lastWord(text).length();
-			setText(text+suggestions.get(selectionIndex).substring(len)+c);
+			String ins=suggestions.get(selectionIndex).substring(len)+c;
+			System.out.println("ins: '"+ins+"'");
+			setText(text+ins);
 			hidePopup();
 		}
 	}
@@ -146,8 +149,11 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	private void suggestFor(String text) {
 		TreeMap<Integer,Vector<String>> map=new TreeMap<Integer, Vector<String>>(); // maps from lengths l to suggestions with length l
 		suggestions = dictionary.get(text);
-		int minLength=text.length()+2;
+		int minLength=text.length()+1;
+		System.out.println("------------");
 		for (String suggestion:suggestions){
+			suggestion=suggestion.trim();
+			System.out.println("<"+suggestion+">");
 			int len=suggestion.length();
 			if (len<minLength) continue;
 			Vector<String> list = map.get(len);
@@ -157,22 +163,25 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 			}
 			list.add(suggestion);
 		}
-		
+
 		TreeSet<String> filtered=Tools.stringSet();
-		
-		for (Vector<String>suggestions:map.values()){
-			for (String s:suggestions){
+		for (Vector<String>suggestionsOfSameLength:map.values()){
+			for (String s:suggestionsOfSameLength){
 				filtered.add(s);
 				if (filtered.size()>=maxNumberOfSuggestions) break;
 			}
 			if (filtered.size()>=maxNumberOfSuggestions) break;
-		}		
+		}
 		
-		if (filtered.isEmpty()){
+		suggestions.clear();
+		suggestions.addAll(filtered);
+
+		
+		if (suggestions.isEmpty()){
 			hidePopup();
 		} else {
 			suggestionList.removeAll();
-			for (String suggestion:filtered)	{
+			for (String suggestion:suggestions)	{
 				JMenuItem item = new JMenuItem(text+suggestion.substring(text.length()));
 				item.addActionListener(this);
 				item.addKeyListener(this);
