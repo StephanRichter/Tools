@@ -146,9 +146,10 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	private void suggestFor(String text) {
 		TreeMap<Integer,Vector<String>> map=new TreeMap<Integer, Vector<String>>(); // maps from lengths l to suggestions with length l
 		suggestions = dictionary.get(text);
-		
+		int minLength=text.length()+2;
 		for (String suggestion:suggestions){
 			int len=suggestion.length();
+			if (len<minLength) continue;
 			Vector<String> list = map.get(len);
 			if (list==null) {
 				list=new Vector<String>();
