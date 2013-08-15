@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.JMenuItem;
@@ -28,6 +30,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	private static Charset charset =Charset.forName("UTF-8");
 	private JPopupMenu suggestionList;
 	private int selectionIndex=-1;
+	private static int maxNumberOfSuggestions=20;
 	
 	public SuggestField() {
 		this(true);
@@ -141,22 +144,34 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	}
 
 	private void suggestFor(String text) {
-		int len=text.length();
+		TreeMap<Integer,Vector<String>> map=new TreeMap<Integer, Vector<String>>(); // maps from lengths l to suggestions with length l
 		suggestions = dictionary.get(text);
-		for (int i=0; i<suggestions.size(); i++){
-			String suggestion = suggestions.get(i).trim();
-			suggestions.remove(i);
-			if (suggestion.length()<len+4 || i>10) {
-				i--;
-			} else {
-				suggestions.insertElementAt(suggestion.trim(), i);
+		
+		for (String suggestion:suggestions){
+			int len=suggestion.length();
+			Vector<String> list = map.get(len);
+			if (list==null) {
+				list=new Vector<String>();
+				map.put(len, list);
 			}
+			list.add(suggestion);
 		}
-		if (suggestions.isEmpty()){
+		
+		TreeSet<String> filtered=Tools.stringSet();
+		
+		for (Vector<String>suggestions:map.values()){
+			for (String s:suggestions){
+				filtered.add(s);
+				if (filtered.size()>=maxNumberOfSuggestions) break;
+			}
+			if (filtered.size()>=maxNumberOfSuggestions) break;
+		}		
+		
+		if (filtered.isEmpty()){
 			hidePopup();
 		} else {
 			suggestionList.removeAll();
-			for (String suggestion:suggestions)	{
+			for (String suggestion:filtered)	{
 				JMenuItem item = new JMenuItem(text+suggestion.substring(text.length()));
 				item.addActionListener(this);
 				item.addKeyListener(this);
