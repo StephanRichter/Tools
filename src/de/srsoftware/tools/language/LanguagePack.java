@@ -1,8 +1,10 @@
-package de.srsoftware.tools;
+package de.srsoftware.tools.language;
 
 import java.util.TreeMap;
 
 import javax.swing.Action;
+
+import de.srsoftware.tools.ObjectComparator;
 
 
 
@@ -19,6 +21,8 @@ public abstract class LanguagePack {
 	}
 	
 	public String get(String key,String replacement){
-		return get(key).replace("##", replacement);
+		String result=get(key).replace("##", replacement);
+		if (result==null) return key;
+		return result;
 	}
 }
