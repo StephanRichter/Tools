@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;

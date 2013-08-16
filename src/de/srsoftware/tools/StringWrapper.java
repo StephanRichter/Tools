@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 
 public class StringWrapper {
 	private String s;

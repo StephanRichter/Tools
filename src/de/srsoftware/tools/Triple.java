@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 import java.util.TreeMap;
 
 public class Triple<T1,T2,T3> {

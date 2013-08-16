@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 public class Messages {
 	public final static String emptyMindmapNode="leerer Mindmap-Knoten";
 	public final static String imageLoadError="Fehler beim Laden des Bildes (%file)!";

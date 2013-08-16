@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;

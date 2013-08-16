@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;

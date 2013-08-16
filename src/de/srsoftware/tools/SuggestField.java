@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

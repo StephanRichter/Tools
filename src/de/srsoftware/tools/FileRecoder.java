@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

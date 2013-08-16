@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 /** This class provides services to handle filenames, such as absolute-relative path conversion **/
 import java.io.File;
 public class FileName{

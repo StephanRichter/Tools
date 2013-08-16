@@ -1,4 +1,4 @@
-package tools.srsoftware;
+package de.srsoftware.tools;
 
 import java.util.Collection;
 import java.util.Iterator;
