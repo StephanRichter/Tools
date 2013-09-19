@@ -22,6 +22,8 @@ public class PrefixTree implements Collection<String> {
 
 	private boolean internAdd(String s) {
 		if (s==null) return false;
+		if (s.startsWith("\"")) s=s.substring(1);
+		if (s.endsWith("\"")) s=s.substring(0, s.length()-1);
 		if (s.length()<1) return false;
 		size=-1;
 		if (ignoreCase) s=s.toLowerCase();
