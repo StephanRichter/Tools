@@ -57,11 +57,11 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		}
 	}
 
-	@Override
+	
 	public void keyPressed(KeyEvent e) {
 	}
 
-	@Override
+	
 	public void keyReleased(KeyEvent e) {
 		//System.out.println("keyReleased in "+e.getSource().getClass().getSimpleName());
 		int c = e.getKeyCode();
@@ -191,7 +191,6 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		}
 	}
 
-	@Override
 	public void keyTyped(KeyEvent e) {
 	}
 	
@@ -205,7 +204,6 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		//System.out.println("Suggestsions saved.");
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println("action in "+e.getSource().getClass().getSimpleName());
 		if (e.getSource() instanceof JMenuItem){

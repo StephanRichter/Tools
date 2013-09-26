@@ -33,7 +33,6 @@ public class PrefixTree implements Collection<String> {
 		return true;
 	}
 
-	@Override
 	public boolean addAll(Collection<? extends String> strings) {
 		for (String s:strings){
 			if (!internAdd(s)) return false;
@@ -41,13 +40,11 @@ public class PrefixTree implements Collection<String> {
 		return true;
 	}
 
-	@Override
 	public void clear() {
 		collection.clear();
 		size=-1;
 	}
 
-	@Override
 	public boolean contains(Object o) {
 		if (o==null) return false;
 		String s=o.toString();
@@ -59,7 +56,6 @@ public class PrefixTree implements Collection<String> {
 		return subtree.contains(s.substring(1));
 	}
 
-	@Override
 	public boolean containsAll(Collection<?> c) {
 		for (Object o:c){
 			if (!contains(o)) return false;
@@ -67,13 +63,11 @@ public class PrefixTree implements Collection<String> {
 		return true;
 	}
 
-	@Override
 	public boolean isEmpty() {
 		return collection.isEmpty();
 	}
 
 	
-	@Override
 	public Iterator<String> iterator() {
 		return getAll().iterator();
 	}
@@ -101,7 +95,6 @@ public class PrefixTree implements Collection<String> {
 		return result;
 	}
 
-	@Override
 	public boolean remove(Object o) {
 		if (o==null) return false;
 		String s=o.toString();
@@ -115,7 +108,6 @@ public class PrefixTree implements Collection<String> {
 		return true;
 	}
 
-	@Override
 	public boolean removeAll(Collection<?> col) {
 		for (Object o:col) {
 			if (!remove(o)) return false;
@@ -123,7 +115,7 @@ public class PrefixTree implements Collection<String> {
 		return true;
 	}
 
-	@Override
+	
 	public boolean retainAll(Collection<?> col) {
 		Vector<String> all = getAll();
 		for (String s:all){
@@ -134,18 +126,18 @@ public class PrefixTree implements Collection<String> {
 		return true;
 	}
 
-	@Override
+	
 	public int size() {
 		if (size==-1)	size=getAll().size();
 		return size;		
 	}
 
-	@Override
+	
 	public Object[] toArray() {
 		return getAll().toArray();
 	}
 
-	@Override
+	
 	public <T> T[] toArray(T[] arg0) {
 		return null;
 	}
@@ -168,7 +160,6 @@ public class PrefixTree implements Collection<String> {
 		System.out.println(tree.get("e"));
 	} //*/
 
-	@Override
 	public boolean add(String s) {		
 		if (s==null) return false;
 		if (s.length()<1) return false;
