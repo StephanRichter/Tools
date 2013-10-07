@@ -20,7 +20,7 @@ public class German extends LanguagePack {
 		map.put("SEARCH", "suchen");
 		map.put("SMALLER", "kleiner");
 		map.put("TEXT_COLOR", "Textfarbe");
-		map.put("VIEW", "Ansiche");
+		map.put("VIEW", "Ansicht");
 		map.put("OK", "Ok");
 		map.put("CANCEL", "Abbrechen");
 		map.put("WARNING", "Warnung!");
