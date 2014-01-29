@@ -607,7 +607,7 @@ public class Tools {
 			searchTime = (new Date()).getTime();
 		} else {
 			if ((new Date()).getTime() - searchTime > 20000) {
-				if (JOptionPane.showConfirmDialog(null, _("Die Suche scheint länger zu dauern. Suche Abbrechen?\nSeems like your search will last longer. Cancel search?"), _("Notification"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(null, _("Seems like your search will last longer. Cancel search?"), _("Notification"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					searchTime = -1;
 					return false;
 				}
