@@ -17,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import de.srsoftware.tools.translations.Translations;
+
 /**
  * stellt ein grafisches Programmelement zur Verfügung, dass einen kleinen, aus Buttons bestehenden Kalender darstellt, aus dem ein Tag gewählt werden kann.
  * 
@@ -145,29 +147,33 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 	private String getMonth(int month) {
 		switch (month) {
 		case 1:
-			return "Januar";
+			return _("January");
 		case 2:
-			return "Februar";
+			return _("February");
 		case 3:
-			return "März";
+			return _("March");
 		case 4:
-			return "April";
+			return _("April");
 		case 5:
-			return "Mai";
+			return _("May");
 		case 6:
-			return "Juni";
+			return _("June");
 		case 7:
-			return "Juli";
+			return _("July");
 		case 8:
-			return "August";
+			return _("August");
 		case 9:
-			return "September";
+			return _("September");
 		case 10:
-			return "Oktober";
+			return _("October");
 		case 11:
-			return "November";
+			return _("November");
 		}
-		return "Dezember";
+		return _("Dezember");
+	}
+	
+	private static String _(String text) { 
+		return Translations.get(text);
 	}
 
 	/**
@@ -200,13 +206,13 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 	}
 
 	private void addDays() {
-		addDay(" Mo");
-		addDay(" Di");
-		addDay(" Mi");
-		addDay(" Do");
-		addDay(" Fr");
-		addDay(" Sa");
-		addDay(" So");
+		addDay(_(" Mo"));
+		addDay(_(" Tu"));
+		addDay(_(" We"));
+		addDay(_(" Th"));
+		addDay(_(" Fr"));
+		addDay(_(" Sa"));
+		addDay(_(" Su"));
 	}
 
 	/**

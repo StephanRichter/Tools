@@ -1,6 +1,8 @@
 package de.srsoftware.tools;
 /** This class provides services to handle filenames, such as absolute-relative path conversion **/
 import java.io.File;
+
+import de.srsoftware.tools.translations.Translations;
 public class FileName{
   private String absoluteFilename;
   private static char sc=File.separatorChar;;
@@ -134,6 +136,10 @@ public class FileName{
     return result;
   }
   
+	private static String _(String key, Object insert) {
+		return Translations.get(key, insert);
+	}
+  
   /**
   * Takes the path from the fully specified filename, goes &lt;levels&gt; directory levels up
   * and searches the file beginning from there.<br>
@@ -141,7 +147,7 @@ public class FileName{
   * The filname including a path, if successfull, null otherwise
   **/
   public static String searchFileUpward(String filename,int levels){
-    System.out.print("searching for file "+filename);
+    System.out.print(_("searching for file #",filename));
     FileName f=new FileName(filename);
     String dir=f.getPathNameFromPath();
     int i=dir.lastIndexOf(sc);

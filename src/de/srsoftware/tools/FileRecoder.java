@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+
+import de.srsoftware.tools.translations.Translations;
 /**
   *
   * Beschreibung
@@ -39,7 +41,7 @@ public class FileRecoder {
       }
       InFile.close();
       if (!isUTF8){
-        System.out.print("Kovertiere "+filename+" zu UTF-8...");
+        System.out.print(_("converting # to UTF-8...",filename));
         InFile=new BufferedReader(new InputStreamReader(new FileInputStream(filename),"Cp1252"));
         BufferedWriter OutFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile),"UTF-8"));
         OutFile.write("[Encoding]");
@@ -62,6 +64,10 @@ public class FileRecoder {
     return true;
   }
   
+
+	private static String _(String key, Object insert) {
+		return Translations.get(key, insert);
+	}
   public static boolean recode(URL fileUrl){
   	if (Tools.fileIsLocal(fileUrl)){
   		String s=fileUrl.toString();

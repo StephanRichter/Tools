@@ -11,7 +11,6 @@ public class Filefilter implements FileFilter {
 	}
 
 	public boolean accept(File arg0) {
-		// TODO Auto-generated method stub
 		return arg0.getName().startsWith(name);
 	}
 

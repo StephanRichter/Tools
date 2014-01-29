@@ -22,6 +22,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import de.srsoftware.tools.translations.Translations;
+
 public class Tools {
 	public static String lastSelectedFile = ""; // speichert, welche Datei zuletzt mit einem Dialog geöffnet wurde, um beim nächsten Aufruf des Dialogs im gleichen Ordner zu starten
 	public static TreeSet<String> oldMessages = new TreeSet<String>();
@@ -30,7 +32,13 @@ public class Tools {
 	public static String language="German";
 
 	public static void notImplemented(String method) {
-		System.out.println(Messages.notImplemented.replace("%method", method));
+		System.out.println(_("The method \"#\" has not been implemented, yet.",method));
+	}
+	private static String _(String text) { 
+		return Translations.get(text);
+	}
+	private static String _(String key, Object insert) {
+		return Translations.get(key, insert);
 	}
 
 	public static String insertTab(String text) {
@@ -54,7 +62,7 @@ public class Tools {
 				lastSelectedFile = FileDialog.getSelectedFile().getPath();
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
-				System.out.println("Die angegebene Zeichenkette ist keine gültige URL!");
+				System.out.println(_("The given text is not a valid URL!"));
 			}
 		}
 		return result;
@@ -67,7 +75,7 @@ public class Tools {
 			result = new URL(JOptionPane.showInputDialog(owner, text, ""));
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Die angegebene Zeichenkette ist keine gültige URL!");
+			System.out.println(_("The given text is not a valid URL!"));
 		}
 		return result;
 	}
@@ -599,7 +607,7 @@ public class Tools {
 			searchTime = (new Date()).getTime();
 		} else {
 			if ((new Date()).getTime() - searchTime > 20000) {
-				if (JOptionPane.showConfirmDialog(null, "Die Suche scheint länger zu dauern. Suche Abbrechen?\nSeems like your search will last longer. Cancel search?", "Hinweis", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(null, _("Die Suche scheint länger zu dauern. Suche Abbrechen?\nSeems like your search will last longer. Cancel search?"), _("Notification"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					searchTime = -1;
 					return false;
 				}
