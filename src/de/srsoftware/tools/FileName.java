@@ -4,19 +4,74 @@ import java.io.File;
 
 import de.srsoftware.tools.translations.Translations;
 public class FileName{
-  private String absoluteFilename;
-  private static char sc=File.separatorChar;;
-
-  /** resets the path-separators dependent on the OS **/
-  private static String fixPathSeparators(String path){
-    if (sc=='\\'){
-      path=path.replace('/',sc);
-    } else {
-      path=path.replace('\\',sc);
-    }
-    return path;
+  /**
+  * sucht nach der Datei &lt;filename&gt; in allen Unterverzeichnissen des angegebenen Pfades
+  **/
+  public static String searchFile(String filename){
+    FileName f=new FileName(filename);
+    String result=searchFile(f.getFileNameFromPath().toUpperCase(),f.getPathNameFromPath());
+    return result;
   }
+  /**
+  * Takes the path from the fully specified filename, goes &lt;levels&gt; directory levels up
+  * and searches the file beginning from there.<br>
+  * Result:<br>
+  * The filname including a path, if successfull, null otherwise
+  **/
+  public static String searchFileUpward(String filename,int levels){
+    System.out.print(_("searching for file #",filename));
+    FileName f=new FileName(filename);
+    String dir=f.getPathNameFromPath();
+    int i=dir.lastIndexOf(sc);
+    while (levels>0){
+      i--;
+      while ((i>0)&&(dir.charAt(i)!=sc)) {
+        i--;
+      }
+      levels--;
+    }
+    if (i<=0) i=dir.indexOf(sc);
+    String result=searchFile(f.getFileNameFromPath().toUpperCase(),dir.substring(0,i+1));
+    System.out.println();
+    return result;
+  };
 
+  private static String _(String key, Object insert) {
+		return Translations.get(key, insert);
+	}
+
+  /** extracts the equal part of the given paths **/
+  private static String getPathMatch(String path1, String path2){
+    int i1=path1.indexOf(sc);
+    int i2=path2.indexOf(sc);
+    String matchPath="";
+    while ((i1>-1)&&(i2>-1)&&(path2.substring(0,i2).equals(path1.substring(0,i1)))){
+      matchPath=path1.substring(0,i1+1);
+      i1=path1.indexOf(sc,i1+1);
+      i2=path2.indexOf(sc,i2+1);
+    }
+    return matchPath;
+  }
+  
+  private static String searchFile(String filename,String directory){
+    System.out.print('.');
+    String[]list=new File(directory).list();
+    if (list==null) return null;
+    for (int i=0; i<list.length; i++){
+      if (new File(directory+list[i]).isDirectory()){
+        String subDirResult=searchFile(filename,directory+list[i]+sc);
+        if (subDirResult!=null) return subDirResult;
+      } else {
+        if (list[i].toUpperCase().equals(filename)) return directory+list[i];
+      }
+    }
+    return null;
+  }
+  
+  private String absoluteFilename;
+  
+  private static char sc=File.separatorChar;
+  
   /** deletes rudiments of relative paths in a filename **/
   private static String CollapseFilename(String f){
     int i=f.indexOf(".."+sc);
@@ -28,6 +83,22 @@ public class FileName{
     return f;
   }
   
+  /** resets the path-separators dependent on the OS **/
+  private static String fixPathSeparators(String path){
+    if (sc=='\\'){
+      path=path.replace('/',sc);
+    } else {
+      path=path.replace('\\',sc);
+    }
+    return path;
+  }
+  
+  /** Constructs a new, empty FileName object **/
+  public FileName(){
+    absoluteFilename=null;
+    sc=File.separatorChar;
+  }
+
   /** Constructs a new FileName object using the given filename **/
   public FileName(String filename){
     int i=filename.indexOf(':');
@@ -50,45 +121,15 @@ public class FileName{
     sc=File.separatorChar;
   }
   
-  /** Constructs a new, empty FileName object **/
-  public FileName(){
-    absoluteFilename=null;
-    sc=File.separatorChar;
-  }
-  
-  /** sets the current FileName's filename parameter **/
-  public void setFileName(String newFileName){
-    absoluteFilename=CollapseFilename(fixPathSeparators(newFileName));
-  }
-  
-  /** returns the absolute filename **/
-  public String toString(){
-    return absoluteFilename;
-  }
-  
   /** returns the filename without any path information **/
   public String getFileNameFromPath(){
     int i=absoluteFilename.lastIndexOf(sc);
     if (i>-1) return absoluteFilename.substring(i+1); else return absoluteFilename;
   }
-  
   /** returns the path without trailing filename **/
   public String getPathNameFromPath(){
     int i=absoluteFilename.lastIndexOf(sc);
     if (i>-1) return absoluteFilename.substring(0,i+1); else return "";
-  }
-
-  /** extracts the equal part of the given paths **/
-  private static String getPathMatch(String path1, String path2){
-    int i1=path1.indexOf(sc);
-    int i2=path2.indexOf(sc);
-    String matchPath="";
-    while ((i1>-1)&&(i2>-1)&&(path2.substring(0,i2).equals(path1.substring(0,i1)))){
-      matchPath=path1.substring(0,i1+1);
-      i1=path1.indexOf(sc,i1+1);
-      i2=path2.indexOf(sc,i2+1);
-    }
-    return matchPath;
   }
   
   /** returns the filename relative to the File <i>baseFile</i> **/
@@ -112,55 +153,14 @@ public class FileName{
     }
     return relDir+targetPath+targetFile;
   }
-  private static String searchFile(String filename,String directory){
-    System.out.print('.');
-    String[]list=new File(directory).list();
-    if (list==null) return null;
-    for (int i=0; i<list.length; i++){
-      if (new File(directory+list[i]).isDirectory()){
-        String subDirResult=searchFile(filename,directory+list[i]+sc);
-        if (subDirResult!=null) return subDirResult;
-      } else {
-        if (list[i].toUpperCase().equals(filename)) return directory+list[i];
-      }
-    }
-    return null;
+  
+	/** sets the current FileName's filename parameter **/
+  public void setFileName(String newFileName){
+    absoluteFilename=CollapseFilename(fixPathSeparators(newFileName));
   }
   
-  /**
-  * sucht nach der Datei &lt;filename&gt; in allen Unterverzeichnissen des angegebenen Pfades
-  **/
-  public static String searchFile(String filename){
-    FileName f=new FileName(filename);
-    String result=searchFile(f.getFileNameFromPath().toUpperCase(),f.getPathNameFromPath());
-    return result;
-  }
-  
-	private static String _(String key, Object insert) {
-		return Translations.get(key, insert);
-	}
-  
-  /**
-  * Takes the path from the fully specified filename, goes &lt;levels&gt; directory levels up
-  * and searches the file beginning from there.<br>
-  * Result:<br>
-  * The filname including a path, if successfull, null otherwise
-  **/
-  public static String searchFileUpward(String filename,int levels){
-    System.out.print(_("searching for file #",filename));
-    FileName f=new FileName(filename);
-    String dir=f.getPathNameFromPath();
-    int i=dir.lastIndexOf(sc);
-    while (levels>0){
-      i--;
-      while ((i>0)&&(dir.charAt(i)!=sc)) {
-        i--;
-      }
-      levels--;
-    }
-    if (i<=0) i=dir.indexOf(sc);
-    String result=searchFile(f.getFileNameFromPath().toUpperCase(),dir.substring(0,i+1));
-    System.out.println();
-    return result;
+  /** returns the absolute filename **/
+  public String toString(){
+    return absoluteFilename;
   }
 }

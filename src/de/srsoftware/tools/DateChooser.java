@@ -27,6 +27,9 @@ import de.srsoftware.tools.translations.Translations;
  */
 public class DateChooser extends JPanel implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 8240006199572579622L;
+	private static String _(String text) { 
+		return Translations.get(text);
+	}
 	private Vector<JButton> dateButtons = new Vector<JButton>(); // für jeden Tag im Monat und die Überlappungen wird später je ein Button erzeugt, diese Buttons werden in der Liste verwaltet
 	private TreeSet<ActionListener> actionListeners = new TreeSet<ActionListener>(); // die Menge der Objekte, die für eine Benachrichtigung über DatumÄnderiungen vorgesehen sind
 	private JButton selectedButton = null;// speichert einen Zeiger auf den aktuell ausgewählten Button
@@ -34,7 +37,10 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 	private JLabel yearLabel, monthLabel; // Textfelder für die Anzeige des augewählten Jahres und Monats
 	private int year, month, firstDay; // speichert intern das gewählte Jahr, den gewählen Monat und den gewählten Tag
 	private String toolTipText; // Speichert den Hilfetext
+
 	private JButton lastMonth, nextMonth, lastYear, nextYear; // Knöpfe zum Eintellen von Monat und Jahr
+
+	private String helpText = null;
 
 	/**
 	 * Erzeugt eine neue Instanz, die dann der grafischen Oberfläche eines Programmes hinzugefügt werden kann
@@ -103,116 +109,82 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 	}
 
 	/**
-	 * diese Methode wird beim Klicken des Buttons ausgelöst, mit welchem ein Monat zurück gesprungen wird
+	 * diese Methode wird ausgelöst, wenn ein Button des aktuellen Monats geklickt wird und bewirkt die Auswahl des geklickten Buttons und das Setzen des entsprechenden Datums
 	 */
-	protected void decreaseMonth() {
-		month--; // den Monats-Zähler um 1 verringern
-		if (month < 1) { // wenn dadurch der Monat "0" erreicht wird zum Monat 12 springen und den Jahreszähler verringern
-			month = 12;
-			year--;
-		}
-		resetMonth(); // die Buttons entsprechend dem gewählten Monat anzeigen
+	public void actionPerformed(ActionEvent arg0) {
+		JButton sender = (JButton) arg0.getSource(); // bestimmt den geklickten Button
+		selectButton(sender); // veranlasst die optische Markierung des Buttons und das neusetzen des gewählten Datums
 	}
 
 	/**
-	 * diese Methode wird beim Klicken des Buttons ausgelöst, mit welchem ein Monat vorwärts gesprungen wird
-	 */
-	protected void increaseMonth() {
-		month++; // den Monats-Zähler um 1 erhöhen
-		if (month > 12) { // wenn dadurch der Monat "13" erreicht wird zum Monat 1 springen und den Jahreszähler erhöhen
-			month = 1;
-			year++;
-		}
-		resetMonth(); // die Buttons entsprechend dem gewählten Monat anzeigen
-	}
-
-	/**
-	 * entfernt alle Buttons aus dem Tages-Auswahlfeld und veranlasst die zum aktuellen Monat gehörenden Buttons hinzuzufügen
-	 */
-	private void resetMonth() {
-		yearLabel.setText(String.valueOf(year)); // Textfeld mit dem Jahr aktualisieren
-		monthLabel.setText(getMonth(month)); // Textfeld mit dem Monat aktualisieren
-		for (int i = dateButtons.size() - 1; i >= 0; i--)
-			buttonPanel.remove(dateButtons.get(i)); // alle Buttons aus dem Tages-Auswahl-Feld entfernen
-		dateButtons.clear();
-		setMonth(); // neue Buttons hinzufügen
-	}
-
-	/**
-	 * Gibt zu einer Monatszahl den entsprechenden Monatsnamen zurück
+	 * registriert eine Komponente zur Benachrichtigung bei Änderung des gewählten Datums
 	 * 
-	 * @param month die Nummer des Monats (1 - 12)
-	 * @return den Namen des Monats
+	 * @param l die Komponente, die benachrichtigt werden soll, wenn sich das gewählte Datum ändert
 	 */
-	private String getMonth(int month) {
-		switch (month) {
-		case 1:
-			return _("January");
-		case 2:
-			return _("February");
-		case 3:
-			return _("March");
-		case 4:
-			return _("April");
-		case 5:
-			return _("May");
-		case 6:
-			return _("June");
-		case 7:
-			return _("July");
-		case 8:
-			return _("August");
-		case 9:
-			return _("September");
-		case 10:
-			return _("October");
-		case 11:
-			return _("November");
-		}
-		return _("Dezember");
+	public void addActionListener(ActionListener l) {
+		actionListeners.add(l);
 	}
 	
-	private static String _(String text) { 
-		return Translations.get(text);
-	}
-
 	/**
-	 * erzuegt für den in der Variable month gesetzten Monat die entsprechenden Tages-Auswahl-Buttons
+	 * liefert zur Auswahl das entsprechende Date-Objekt
+	 * 
+	 * @return das Date-Objet, welches das gewählte Datum repräsentiert
 	 */
 	@SuppressWarnings("deprecation")
-	private void setMonth() {
-		Date date = new Date(year - 1900, month - 1, 1); // erzeugt ein Datumsobjekt zum ersten Tag es Monats, in dem der ausgewählte Tag liegt
-		int diff = 86400000; // Zahl der Millisekunden eines Tages = Differenz der Millisekunden zweier benachbarter Tage
-		int prefix = -1; // 
-		int counter = 0;
-		while (date.getDay() != 1)
-			// bestimmt den ersten Montag vor dem ersten Tag des Monats in welchem der gewählte Tag liegt. Der erste Knopf im Tages-Auswahl-Bereich soll immer ein Montag sein
-			date = new Date(date.getTime() - diff);
-		for (int i = 0; i < 42; i++) { // fügt einen Button für den gefundenen Montag und die 41 folgenden Tage (also inklusive dem gewählten Monat) zum Panel hinzu
-			counter++;
-			int day = date.getDate();
-			if (day == 1) {
-				prefix++;
-				if (prefix == 0) firstDay = counter;
-			}
-			addDateButton(new JButton(String.valueOf(day)), prefix); // hier wird der Button für den bestimmten Tag erzeugt und hinzugefügt
-			date.setDate(day + 1);
+	public Date getSelectedDate() {
+		if (selectedButton == null) return null; // wenn kein Tages-Button ausgewählt wurde, wird auch kein Datum zurückgegeben
+		return new Date(year - 1900, month - 1, Integer.parseInt(selectedButton.getText())); // anderenfalls wird das dem gewählten Knopf entsprechende Datum erzuegt und ausgegeben
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON3 && helpText != null) JOptionPane.showMessageDialog(this, helpText);
+	}
+
+	public void mouseEntered(MouseEvent e) {}
+
+	public void mouseExited(MouseEvent e) {}
+
+	public void mousePressed(MouseEvent e) {}
+
+	public void mouseReleased(MouseEvent e) {}
+
+	/**
+	 * setzt den Kalender auf das angegebene Datum
+	 * 
+	 * @param day der Tag
+	 * @param month der Monat
+	 * @param year das Jahr
+	 */
+	public void setDate(int day, int month, int year) {
+		this.month = month; // setzt die internen Werte
+		this.year = year;
+		resetMonth(); // erzeugt die dem Monat und Jahr entsprechenden Buttons
+		selectButton(dateButtons.get(day + firstDay - 2)); // wählt den Button, der dem gegebenen Tag entspricht
+	}
+
+	public void setHelpText(String message) {
+		helpText = message;
+		addMouseListener(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.JComponent#setToolTipText(java.lang.String)
+	 */
+	public void setToolTipText(String text) {
+		buttonPanel.setToolTipText(text);
+		yearPanel.setToolTipText(text);
+		yearLabel.setToolTipText(text);
+		monthLabel.setToolTipText(text);
+		for (int i = 0; i < dateButtons.size(); i++) {
+			dateButtons.get(i).setToolTipText(text);
 		}
-	}
-
-	private void addDay(String d) {
-		JLabel l = new JLabel(d);
-		buttonPanel.add(l);
-	}
-
-	private void addDays() {
-		addDay(_(" Mo"));
-		addDay(_(" Tu"));
-		addDay(_(" We"));
-		addDay(_(" Th"));
-		addDay(_(" Fr"));
-		addDay(_(" Sa"));
-		addDay(_(" Su"));
+		toolTipText = text;
+		lastMonth.setToolTipText(text);
+		nextMonth.setToolTipText(text);
+		lastYear.setToolTipText(text);
+		nextYear.setToolTipText(text);
 	}
 
 	/**
@@ -249,21 +221,65 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 		dateButtons.add(dateButton); // Button in einer Liste speichern, um ihn später wieder löschen zu können
 	}
 
-	/**
-	 * diese Methode wird ausgelöst, wenn ein Button des aktuellen Monats geklickt wird und bewirkt die Auswahl des geklickten Buttons und das Setzen des entsprechenden Datums
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		JButton sender = (JButton) arg0.getSource(); // bestimmt den geklickten Button
-		selectButton(sender); // veranlasst die optische Markierung des Buttons und das neusetzen des gewählten Datums
+	private void addDay(String d) {
+		JLabel l = new JLabel(d);
+		buttonPanel.add(l);
+	}
+
+	private void addDays() {
+		addDay(_(" Mo"));
+		addDay(_(" Tu"));
+		addDay(_(" We"));
+		addDay(_(" Th"));
+		addDay(_(" Fr"));
+		addDay(_(" Sa"));
+		addDay(_(" Su"));
 	}
 
 	/**
-	 * registriert eine Komponente zur Benachrichtigung bei Änderung des gewählten Datums
+	 * Gibt zu einer Monatszahl den entsprechenden Monatsnamen zurück
 	 * 
-	 * @param l die Komponente, die benachrichtigt werden soll, wenn sich das gewählte Datum ändert
+	 * @param month die Nummer des Monats (1 - 12)
+	 * @return den Namen des Monats
 	 */
-	public void addActionListener(ActionListener l) {
-		actionListeners.add(l);
+	private String getMonth(int month) {
+		switch (month) {
+		case 1:
+			return _("January");
+		case 2:
+			return _("February");
+		case 3:
+			return _("March");
+		case 4:
+			return _("April");
+		case 5:
+			return _("May");
+		case 6:
+			return _("June");
+		case 7:
+			return _("July");
+		case 8:
+			return _("August");
+		case 9:
+			return _("September");
+		case 10:
+			return _("October");
+		case 11:
+			return _("November");
+		}
+		return _("Dezember");
+	}
+
+	/**
+	 * entfernt alle Buttons aus dem Tages-Auswahlfeld und veranlasst die zum aktuellen Monat gehörenden Buttons hinzuzufügen
+	 */
+	private void resetMonth() {
+		yearLabel.setText(String.valueOf(year)); // Textfeld mit dem Jahr aktualisieren
+		monthLabel.setText(getMonth(month)); // Textfeld mit dem Monat aktualisieren
+		for (int i = dateButtons.size() - 1; i >= 0; i--)
+			buttonPanel.remove(dateButtons.get(i)); // alle Buttons aus dem Tages-Auswahl-Feld entfernen
+		dateButtons.clear();
+		setMonth(); // neue Buttons hinzufügen
 	}
 
 	/**
@@ -287,67 +303,51 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 	}
 
 	/**
-	 * liefert zur Auswahl das entsprechende Date-Objekt
-	 * 
-	 * @return das Date-Objet, welches das gewählte Datum repräsentiert
+	 * erzuegt für den in der Variable month gesetzten Monat die entsprechenden Tages-Auswahl-Buttons
 	 */
 	@SuppressWarnings("deprecation")
-	public Date getSelectedDate() {
-		if (selectedButton == null) return null; // wenn kein Tages-Button ausgewählt wurde, wird auch kein Datum zurückgegeben
-		return new Date(year - 1900, month - 1, Integer.parseInt(selectedButton.getText())); // anderenfalls wird das dem gewählten Knopf entsprechende Datum erzuegt und ausgegeben
+	private void setMonth() {
+		Date date = new Date(year - 1900, month - 1, 1); // erzeugt ein Datumsobjekt zum ersten Tag es Monats, in dem der ausgewählte Tag liegt
+		int diff = 86400000; // Zahl der Millisekunden eines Tages = Differenz der Millisekunden zweier benachbarter Tage
+		int prefix = -1; // 
+		int counter = 0;
+		while (date.getDay() != 1)
+			// bestimmt den ersten Montag vor dem ersten Tag des Monats in welchem der gewählte Tag liegt. Der erste Knopf im Tages-Auswahl-Bereich soll immer ein Montag sein
+			date = new Date(date.getTime() - diff);
+		for (int i = 0; i < 42; i++) { // fügt einen Button für den gefundenen Montag und die 41 folgenden Tage (also inklusive dem gewählten Monat) zum Panel hinzu
+			counter++;
+			int day = date.getDate();
+			if (day == 1) {
+				prefix++;
+				if (prefix == 0) firstDay = counter;
+			}
+			addDateButton(new JButton(String.valueOf(day)), prefix); // hier wird der Button für den bestimmten Tag erzeugt und hinzugefügt
+			date.setDate(day + 1);
+		}
 	}
 
 	/**
-	 * setzt den Kalender auf das angegebene Datum
-	 * 
-	 * @param day der Tag
-	 * @param month der Monat
-	 * @param year das Jahr
+	 * diese Methode wird beim Klicken des Buttons ausgelöst, mit welchem ein Monat zurück gesprungen wird
 	 */
-	public void setDate(int day, int month, int year) {
-		this.month = month; // setzt die internen Werte
-		this.year = year;
-		resetMonth(); // erzeugt die dem Monat und Jahr entsprechenden Buttons
-		selectButton(dateButtons.get(day + firstDay - 2)); // wählt den Button, der dem gegebenen Tag entspricht
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.JComponent#setToolTipText(java.lang.String)
-	 */
-	public void setToolTipText(String text) {
-		buttonPanel.setToolTipText(text);
-		yearPanel.setToolTipText(text);
-		yearLabel.setToolTipText(text);
-		monthLabel.setToolTipText(text);
-		for (int i = 0; i < dateButtons.size(); i++) {
-			dateButtons.get(i).setToolTipText(text);
+	protected void decreaseMonth() {
+		month--; // den Monats-Zähler um 1 verringern
+		if (month < 1) { // wenn dadurch der Monat "0" erreicht wird zum Monat 12 springen und den Jahreszähler verringern
+			month = 12;
+			year--;
 		}
-		toolTipText = text;
-		lastMonth.setToolTipText(text);
-		nextMonth.setToolTipText(text);
-		lastYear.setToolTipText(text);
-		nextYear.setToolTipText(text);
+		resetMonth(); // die Buttons entsprechend dem gewählten Monat anzeigen
 	}
 
-	private String helpText = null;
-
-	public void setHelpText(String message) {
-		helpText = message;
-		addMouseListener(this);
+	/**
+	 * diese Methode wird beim Klicken des Buttons ausgelöst, mit welchem ein Monat vorwärts gesprungen wird
+	 */
+	protected void increaseMonth() {
+		month++; // den Monats-Zähler um 1 erhöhen
+		if (month > 12) { // wenn dadurch der Monat "13" erreicht wird zum Monat 1 springen und den Jahreszähler erhöhen
+			month = 1;
+			year++;
+		}
+		resetMonth(); // die Buttons entsprechend dem gewählten Monat anzeigen
 	}
-
-	public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON3 && helpText != null) JOptionPane.showMessageDialog(this, helpText);
-	}
-
-	public void mouseEntered(MouseEvent e) {}
-
-	public void mouseExited(MouseEvent e) {}
-
-	public void mousePressed(MouseEvent e) {}
-
-	public void mouseReleased(MouseEvent e) {}
 
 }

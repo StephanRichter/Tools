@@ -28,13 +28,29 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	private static PrefixTree dictionary=null;
 	private static File dictionaryFile=new File(System.getProperty("user.home")+"/.config/dictionary");
 	private static Charset charset =Charset.forName("UTF-8");
+	public static void save() throws IOException {
+		if (dictionary==null) return;
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dictionaryFile), charset));
+		for (String line:dictionary.getAll()){
+			bw.write(line+"\n");
+		}
+		bw.close();
+		//System.out.println("Suggestsions saved.");
+	}
 	private JPopupMenu suggestionList;
 	private int selectionIndex=-1;
+	
 	private static int maxNumberOfSuggestions=20;
+	
+	private Point pos=null;
+
+	private Vector<String> suggestions;
+
 	
 	public SuggestField() {
 		this(true);
 	}
+
 	
 	public SuggestField(boolean ignoreCase) {
 		super();
@@ -47,21 +63,20 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		suggestionList=new JPopupMenu();
 	}
 
-	private void loadSuggestions(boolean ignoreCase) throws IOException {
-		dictionary=new PrefixTree(ignoreCase);
-		if (dictionaryFile.exists()){
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charset));
-	    String line = null;
-	    while ((line = br.readLine()) != null) dictionary.add(line);
-	    br.close();
+	public void actionPerformed(ActionEvent e) {
+		//System.out.println("action in "+e.getSource().getClass().getSimpleName());
+		if (e.getSource() instanceof JMenuItem){
+			JMenuItem item=(JMenuItem) e.getSource();
+			String text=getText();
+			int len=lastWord(text).length();
+			setText(text.substring(0,text.length()-len)+item.getText());
+			hidePopup();
 		}
 	}
 
-	
 	public void keyPressed(KeyEvent e) {
 	}
 
-	
 	public void keyReleased(KeyEvent e) {
 		//System.out.println("keyReleased in "+e.getSource().getClass().getSimpleName());
 		int c = e.getKeyCode();
@@ -96,54 +111,27 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 			}
 		}
 	}
-
-	private String trim(String lastWord) {
-		boolean changed=true;
-		while (changed){
-			changed=false;
-			if (lastWord.endsWith("\\n")) lastWord=lastWord.substring(0,lastWord.length()-2);
-			if (lastWord.endsWith("?") ||
-					lastWord.endsWith("!") ||
-					lastWord.endsWith(".") ||
-					lastWord.endsWith(",") ||
-					lastWord.endsWith(";") ||
-					lastWord.endsWith(":") ||
-					lastWord.endsWith(")") ||
-					lastWord.endsWith("]") ||
-					lastWord.endsWith("}")) {
-				lastWord=lastWord.substring(0, lastWord.length()-1);
-				changed=true;
-			}
-			lastWord=lastWord.trim();
-		}
-		return lastWord;
+	
+	public void keyTyped(KeyEvent e) {
 	}
-
-	private void useSuggestion(char c) {
-		if (!suggestionList.isVisible()) return;
-		if (selectionIndex>-1){
-			String text=getText();
-			text=text.substring(0, text.length()-1);
-			System.out.println("Text: '"+text+"'");
-			int len=lastWord(text).length();
-			String ins=suggestions.get(selectionIndex).substring(len)+c;
-			System.out.println("ins: '"+ins+"'");
-			setText(text+ins);
-			hidePopup();
-		}
+	private void hidePopup(){
+		suggestionList.setVisible(false);		
 	}
-
+	
 	private String lastWord(String text) {
 		int pos=text.trim().lastIndexOf(' ');
 		if (pos>0) return text.substring(pos).trim();
 		return text.trim();
 	}
-	
-	private Point pos=null;
-	private Vector<String> suggestions;
-	
-	private void hidePopup(){
-		suggestionList.setVisible(false);		
+
+	private void loadSuggestions(boolean ignoreCase) throws IOException {
+		dictionary=new PrefixTree(ignoreCase);
+		if (dictionaryFile.exists()){
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charset));
+	    String line = null;
+	    while ((line = br.readLine()) != null) dictionary.add(line);
+	    br.close();
+		}
 	}
 
 	private void suggestFor(String text) {
@@ -190,27 +178,39 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 			suggestionList.show(this, pos.x-10, pos.y+20);
 		}
 	}
-
-	public void keyTyped(KeyEvent e) {
-	}
 	
-	public static void save() throws IOException {
-		if (dictionary==null) return;
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dictionaryFile), charset));
-		for (String line:dictionary.getAll()){
-			bw.write(line+"\n");
+	private String trim(String lastWord) {
+		boolean changed=true;
+		while (changed){
+			changed=false;
+			if (lastWord.endsWith("\\n")) lastWord=lastWord.substring(0,lastWord.length()-2);
+			if (lastWord.endsWith("?") ||
+					lastWord.endsWith("!") ||
+					lastWord.endsWith(".") ||
+					lastWord.endsWith(",") ||
+					lastWord.endsWith(";") ||
+					lastWord.endsWith(":") ||
+					lastWord.endsWith(")") ||
+					lastWord.endsWith("]") ||
+					lastWord.endsWith("}")) {
+				lastWord=lastWord.substring(0, lastWord.length()-1);
+				changed=true;
+			}
+			lastWord=lastWord.trim();
 		}
-		bw.close();
-		//System.out.println("Suggestsions saved.");
+		return lastWord;
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		//System.out.println("action in "+e.getSource().getClass().getSimpleName());
-		if (e.getSource() instanceof JMenuItem){
-			JMenuItem item=(JMenuItem) e.getSource();
+	private void useSuggestion(char c) {
+		if (!suggestionList.isVisible()) return;
+		if (selectionIndex>-1){
 			String text=getText();
+			text=text.substring(0, text.length()-1);
+			System.out.println("Text: '"+text+"'");
 			int len=lastWord(text).length();
-			setText(text.substring(0,text.length()-len)+item.getText());
+			String ins=suggestions.get(selectionIndex).substring(len)+c;
+			System.out.println("ins: '"+ins+"'");
+			setText(text+ins);
 			hidePopup();
 		}
 	}

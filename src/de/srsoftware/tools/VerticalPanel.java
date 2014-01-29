@@ -27,10 +27,6 @@ public class VerticalPanel extends JPanel {
 		setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),string)); // Rahmen um Feld Erzeugen
 	}
 
-	private void init() {
-		this.setLayout(null);
-	}
-	
 	public void add(JComponent c){
 		c.setSize(c.getPreferredSize());
 		c.setLocation(versatz, höhe);
@@ -41,5 +37,9 @@ public class VerticalPanel extends JPanel {
 	
 	public void skalieren(){
 		setPreferredSize(new Dimension(breite+versatz+versatz,höhe+versatz));
+	}
+	
+	private void init() {
+		this.setLayout(null);
 	}
 }

@@ -40,13 +40,6 @@ public class HorizontalPanel extends JPanel {
 	}
 
 	/**
-	 * schaltet das Java-eigene automatische Layout ab
-	 */
-	private void init() {
-		this.setLayout(null);
-	}
-	
-	/**
 	 * fügt eine grafische Komponente zum Panel hinzu. die Komponente wird rechts neben der zuletzt hinzugefügten angeordnet
 	 * @param c die zuzufügende Komponente
 	 */
@@ -63,5 +56,12 @@ public class HorizontalPanel extends JPanel {
 	 */
 	public void skalieren(){
 		setPreferredSize(new Dimension(breite+versatz+versatz,höhe+versatz));
+	}
+	
+	/**
+	 * schaltet das Java-eigene automatische Layout ab
+	 */
+	private void init() {
+		this.setLayout(null);
 	}
 }

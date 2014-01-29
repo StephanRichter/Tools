@@ -20,17 +20,11 @@ public class PrefixTree implements Collection<String> {
 		this.ignoreCase=ignoreCase;
 	}
 
-	private boolean internAdd(String s) {
+	public boolean add(String s) {		
 		if (s==null) return false;
 		if (s.length()<1) return false;
-		size=-1;
-		if (ignoreCase) s=s.toLowerCase();
-		char c=s.charAt(0);
-		PrefixTree subtree = collection.get(c);
-		if (subtree==null) subtree=new PrefixTree();
-		subtree.internAdd(s.substring(1));
-		collection.put(c, subtree);
-		return true;
+		if (!s.endsWith(" ")) s=s+" ";
+		return internAdd(s);
 	}
 
 	public boolean addAll(Collection<? extends String> strings) {
@@ -63,15 +57,6 @@ public class PrefixTree implements Collection<String> {
 		return true;
 	}
 
-	public boolean isEmpty() {
-		return collection.isEmpty();
-	}
-
-	
-	public Iterator<String> iterator() {
-		return getAll().iterator();
-	}
-
 	public Vector<String> get(String prefix){
 		if (prefix==null) return null;
 		Vector<String> result=new Vector<String>();
@@ -84,17 +69,16 @@ public class PrefixTree implements Collection<String> {
 		
 		return result;
 	}
+
 	
-	Vector<String> getAll() {
-		Vector<String> result=new Vector<String>();
-		for (char c:collection.keySet()){
-			PrefixTree subset = collection.get(c);
-			if (subset.isEmpty()) result.add(""+c);
-			for (String substring:subset.getAll()) result.add(c+substring);
-		}
-		return result;
+	public boolean isEmpty() {
+		return collection.isEmpty();
 	}
 
+	public Iterator<String> iterator() {
+		return getAll().iterator();
+	}
+	
 	public boolean remove(Object o) {
 		if (o==null) return false;
 		String s=o.toString();
@@ -115,7 +99,6 @@ public class PrefixTree implements Collection<String> {
 		return true;
 	}
 
-	
 	public boolean retainAll(Collection<?> col) {
 		Vector<String> all = getAll();
 		for (String s:all){
@@ -141,6 +124,7 @@ public class PrefixTree implements Collection<String> {
 	public <T> T[] toArray(T[] arg0) {
 		return null;
 	}
+
 	
 	@Override
 	public String toString() {
@@ -159,11 +143,27 @@ public class PrefixTree implements Collection<String> {
 		System.out.println(tree.get(""));
 		System.out.println(tree.get("e"));
 	} //*/
-
-	public boolean add(String s) {		
+	
+	private boolean internAdd(String s) {
 		if (s==null) return false;
 		if (s.length()<1) return false;
-		if (!s.endsWith(" ")) s=s+" ";
-		return internAdd(s);
+		size=-1;
+		if (ignoreCase) s=s.toLowerCase();
+		char c=s.charAt(0);
+		PrefixTree subtree = collection.get(c);
+		if (subtree==null) subtree=new PrefixTree();
+		subtree.internAdd(s.substring(1));
+		collection.put(c, subtree);
+		return true;
+	}
+
+	Vector<String> getAll() {
+		Vector<String> result=new Vector<String>();
+		for (char c:collection.keySet()){
+			PrefixTree subset = collection.get(c);
+			if (subset.isEmpty()) result.add(""+c);
+			for (String substring:subset.getAll()) result.add(c+substring);
+		}
+		return result;
 	}
 }

@@ -65,10 +65,7 @@ public class FileRecoder {
   }
   
 
-	private static String _(String key, Object insert) {
-		return Translations.get(key, insert);
-	}
-  public static boolean recode(URL fileUrl){
+	public static boolean recode(URL fileUrl){
   	if (Tools.fileIsLocal(fileUrl)){
   		String s=fileUrl.toString();
   		s=s.substring(s.indexOf(":")+1);
@@ -76,5 +73,8 @@ public class FileRecoder {
   	}
   	return false;
   }
+  private static String _(String key, Object insert) {
+		return Translations.get(key, insert);
+	}
 }
 
