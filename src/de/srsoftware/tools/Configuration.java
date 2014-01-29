@@ -67,7 +67,7 @@ public class Configuration {
 			createDirectory(configFile.getParentFile());
 			bw=new BufferedWriter(new FileWriter(configFile));
 		} else {
-			bw=new BufferedWriter(new FileWriter(configFile,true));
+			bw=new BufferedWriter(new FileWriter(configFile));
 		}
 		for (Entry<String, String> entry :config.entrySet()){
 			bw.write(entry.getKey()+" = "+entry.getValue()+"\n");
