@@ -1,6 +1,7 @@
 package de.srsoftware.tools;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.CharacterIterator;
 import java.text.DateFormat;
@@ -832,4 +835,24 @@ public class Tools {
 	static void windowsExecute(String command) throws IOException {
 		Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + command);
 	}
+	
+	public static void openWebpage(URI uri) {
+    Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+        try {
+            desktop.browse(uri);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	}
+	public static void openWebpage(String url) {
+		try {
+			openWebpage((new URL(url)).toURI());
+		} catch (URISyntaxException e){
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+	    e.printStackTrace();
+    }
+  }
 }
