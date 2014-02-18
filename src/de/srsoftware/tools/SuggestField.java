@@ -206,10 +206,8 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		if (selectionIndex>-1){
 			String text=getText();
 			text=text.substring(0, text.length()-1);
-			System.out.println("Text: '"+text+"'");
 			int len=lastWord(text).length();
 			String ins=suggestions.get(selectionIndex).substring(len)+c;
-			System.out.println("ins: '"+ins+"'");
 			setText(text+ins);
 			hidePopup();
 		}
