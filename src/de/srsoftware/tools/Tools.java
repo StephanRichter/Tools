@@ -218,9 +218,18 @@ public class Tools {
 			return f.exists();
 		} else {
 			try {
+				System.out.print("Waiting for connection to "+fileUrl+"...");
 				HttpURLConnection connection = (HttpURLConnection)fileUrl.openConnection();
-				return (connection.getResponseCode()==200);
-			} catch (IOException e) {}
+				int code=connection.getResponseCode();
+				if (code==200) {
+					System.out.println("established.");
+					return true;
+				}
+				System.out.println("failed.");
+				return false;
+			} catch (IOException e) {
+				System.out.println("failed.");
+			}
 			return false;
 		}
 	}
@@ -361,8 +370,6 @@ public class Tools {
 	 * creates an absolute url for a relative link situated in a document e.g: baseDocument = file:///dir1/dir2/document outgoingLink = ../Link result => file:///dir1/Link
 	 */
 	public static URL getURLto(String baseDocument, String outgoingLink) throws MalformedURLException {
-		// TODO Auto-generated method stub
-		// Tools.message("Trying to construct URL for " + outgoingLink);
 		String calculatedLink = outgoingLink;
 		URL result = null;
 		if (!outgoingLink.contains(":") && !outgoingLink.startsWith("/")) {
@@ -379,7 +386,7 @@ public class Tools {
 		}
 		try {
 			result = new URL(calculatedLink);
-		} catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {			
 			String lcs = Tools.lcs(outgoingLink, baseDocument);
 			if (lcs != null && lcs.length() > 0) {
 				outgoingLink = outgoingLink.substring(outgoingLink.lastIndexOf(lcs));
@@ -387,7 +394,7 @@ public class Tools {
 				result = new URL(calculatedLink);
 			}
 		}
-		if (!fileExists(result) && fileIsLocal(result)) {
+		if (fileIsLocal(result) && !fileExists(result)) {
 			return guessRightCase(result);
 		}// */
 		return result;
@@ -720,7 +727,11 @@ public class Tools {
 	}
 
 	public static void trace(Object source, String method, Object data) {
-		System.out.println(source.getClass().toString().substring(6)+"."+method+" => "+data);	  
+		if (source==null){
+			System.out.println("(static) "+method+" => "+data);
+		} else {
+			System.out.println(source.getClass().toString().substring(6)+"."+method+" => "+data);
+		}
   }
 
 	@SuppressWarnings("deprecation")
