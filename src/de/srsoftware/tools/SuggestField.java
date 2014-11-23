@@ -33,7 +33,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		if (dictionary == null) return;
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dictionaryFile), charset));
 		for (String line : dictionary.getAll()) {
-			bw.write(line + "\n");
+			bw.write(line.trim() + "\n");
 		}
 		bw.close();
 		// System.out.println("Suggestsions saved.");
@@ -106,7 +106,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 				if (Character.isLetter(lastChar)) {
 					suggestFor(lastword);
 				} else {
-					if (lastword.length() > 2) {
+					if (lastword !=null && lastword.length() > 2) {
 						dictionary.add(lastword);
 					}
 				}
@@ -131,6 +131,9 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		while (i-- > 1) {
 			char c = text.charAt(i - 1);
 			if (!Character.isLetter(c) && c != '-') {
+				if (c=='\\'){
+					i--;
+				}
 				break;
 			}
 		}
