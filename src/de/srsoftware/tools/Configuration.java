@@ -83,4 +83,8 @@ public class Configuration {
 	public boolean containsKey(String key) {
 	  return config.containsKey(key);
   }
+
+	public void unset(String string) {
+		config.remove(string);
+	}
 }
