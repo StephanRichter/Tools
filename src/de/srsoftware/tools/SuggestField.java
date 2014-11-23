@@ -79,6 +79,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 
 	public void keyReleased(KeyEvent e) {
 		char keyChar = e.getKeyChar();
+		System.out.println(e);
 		if (keyChar == KeyEvent.CHAR_UNDEFINED) {
 			int keyCode = e.getKeyCode();
 			switch (keyCode) {
@@ -91,9 +92,15 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 				suggestionList.requestFocus();
 				selectionIndex++;
 				if (selectionIndex == suggestions.size()) selectionIndex = 0;
+				System.out.println(selectionIndex);
 				break;
 			}
 		} else {
+			if (keyChar==KeyEvent.VK_DELETE){
+				String word=suggestions.get(selectionIndex);
+				dictionary.remove(word);
+				selectionIndex=-1;
+			}
 			if (selectionIndex < 0) {
 				hidePopup();
 			} else {
