@@ -186,20 +186,6 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		}
 	}
 
-	private String trim(String lastWord) {
-		boolean changed = true;
-		while (changed) {
-			changed = false;
-			if (lastWord.endsWith("\\n")) lastWord = lastWord.substring(0, lastWord.length() - 2);
-			if (lastWord.endsWith("?") || lastWord.endsWith("!") || lastWord.endsWith(".") || lastWord.endsWith(",") || lastWord.endsWith(";") || lastWord.endsWith(":") || lastWord.endsWith(")") || lastWord.endsWith("]") || lastWord.endsWith("}")) {
-				lastWord = lastWord.substring(0, lastWord.length() - 1);
-				changed = true;
-			}
-			lastWord = lastWord.trim();
-		}
-		return lastWord;
-	}
-
 	private void useSuggestion(char c) {
 		System.out.println("useSuggestion("+c+")");
 		if (!suggestionList.isVisible()) return;
