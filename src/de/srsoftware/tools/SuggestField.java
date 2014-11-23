@@ -96,15 +96,16 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 				break;
 			}
 		} else {
-			if (Character.isLetter(keyChar)){
-				System.out.println(keyChar+"/"+(int)keyChar);
-				String lastword=lastWord(getText());
-				suggestFor(lastword);
-				System.out.println(lastword);
+			if (selectionIndex<0){
+				hidePopup();
 			} else {
-				System.out.println("non-letter: "+keyChar);
 				useSuggestion(keyChar);
 			}
+
+				System.out.println(keyChar+"/"+(int)keyChar);
+				System.out.println("index: "+selectionIndex);
+				String lastword=lastWord(getText());
+				suggestFor(lastword);
 		}
 	}
 
@@ -122,7 +123,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		
 		while (i-->1){
 			char c=text.charAt(i-1);
-			if (!Character.isLetter(c)){
+			if (!Character.isLetter(c) && c!='-'){
 				break;
 			}
 		}
