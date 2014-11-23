@@ -82,13 +82,16 @@ public class PrefixTree implements Collection<String> {
 	public boolean remove(Object o) {
 		if (o==null) return false;
 		String s=o.toString();
+		if (!s.endsWith(" ")) s=s+" ";
 		if (s.length()<1) return true;
 		size=-1;
 		char c=s.charAt(0);
 		PrefixTree subset = collection.get(c);
 		if (subset==null) return false;
 		subset.remove(s.substring(1));
-		if (subset.isEmpty()) collection.remove(c);
+		if (subset.isEmpty()) {
+			collection.remove(c);
+		}
 		return true;
 	}
 
@@ -130,8 +133,8 @@ public class PrefixTree implements Collection<String> {
 	public String toString() {
 		return collection.toString();
 	}
-	/*
-	public static void main(String[] args) {
+	
+	/*public static void main(String[] args) {
 		PrefixTree tree = new PrefixTree();
 		tree.add("anton");
 		tree.add("berta");
@@ -139,8 +142,11 @@ public class PrefixTree implements Collection<String> {
 		tree.add("brot");
 		tree.add("ei");
 		tree.add("end");
+		System.out.println(tree);
+		tree.remove("brot ");
+		System.out.println(tree);
 		System.out.println(tree.getAll());
-		System.out.println(tree.get(""));
+		System.out.println(tree.get("br"));
 		System.out.println(tree.get("e"));
 	} //*/
 	

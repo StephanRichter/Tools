@@ -1,4 +1,5 @@
 package de.srsoftware.tools;
+
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,194 +22,198 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
+public class SuggestField extends JTextField implements KeyListener, ActionListener {
 
-public class SuggestField extends JTextField implements KeyListener, ActionListener{
-	
-  private static final long serialVersionUID = 4183066803864491291L;
-	private static PrefixTree dictionary=null;
-	private static File dictionaryFile=new File(System.getProperty("user.home")+"/.config/dictionary");
-	private static Charset charset =Charset.forName("UTF-8");
+	private static final long serialVersionUID = 4183066803864491291L;
+	private static PrefixTree dictionary = null;
+	private static File dictionaryFile = new File(System.getProperty("user.home") + "/.config/dictionary");
+	private static Charset charset = Charset.forName("UTF-8");
+
 	public static void save() throws IOException {
-		if (dictionary==null) return;
+		if (dictionary == null) return;
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dictionaryFile), charset));
-		for (String line:dictionary.getAll()){
-			bw.write(line+"\n");
+		for (String line : dictionary.getAll()) {
+			bw.write(line + "\n");
 		}
 		bw.close();
-		//System.out.println("Suggestsions saved.");
+		// System.out.println("Suggestsions saved.");
 	}
+
 	private JPopupMenu suggestionList;
-	private int selectionIndex=-1;
-	
-	private static int maxNumberOfSuggestions=20;
-	
-	private Point pos=null;
+	private int selectionIndex = -1;
+
+	private static int maxNumberOfSuggestions = 20;
+
+	private Point pos = null;
 
 	private Vector<String> suggestions;
 
-	
 	public SuggestField() {
 		this(true);
 	}
 
-	
 	public SuggestField(boolean ignoreCase) {
 		super();
 		try {
-			if (dictionary==null) loadSuggestions(ignoreCase);
+			if (dictionary == null) loadSuggestions(ignoreCase);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		addKeyListener(this);
-		suggestionList=new JPopupMenu();
+		suggestionList = new JPopupMenu();
+		// suggestionList.addKeyListener(this);
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		//System.out.println("action in "+e.getSource().getClass().getSimpleName());
-		if (e.getSource() instanceof JMenuItem){
-			JMenuItem item=(JMenuItem) e.getSource();
-			String text=getText();
-			int len=lastWord(text).length();
-			setText(text.substring(0,text.length()-len)+item.getText());
+		// System.out.println("action in "+e.getSource().getClass().getSimpleName());
+		if (e.getSource() instanceof JMenuItem) {
+			JMenuItem item = (JMenuItem) e.getSource();
+			String text = getText();
+			int len = lastWord(text).length();
+			setText(text.substring(0, text.length() - len) + item.getText());
 			hidePopup();
 		}
 	}
 
-	public void keyPressed(KeyEvent e) {
-	}
+	public void keyPressed(KeyEvent e) {}
 
 	public void keyReleased(KeyEvent e) {
-		//System.out.println("keyReleased in "+e.getSource().getClass().getSimpleName());
-		int c = e.getKeyCode();
-		switch (c){
-		case 38:
-			suggestionList.requestFocus();
-			selectionIndex--;
-			if (selectionIndex<0) selectionIndex=suggestions.size()-1;
-//			System.out.println(selectionIndex);
-			return;
-		case 40:
-			suggestionList.requestFocus();
-			selectionIndex++;
-			if (selectionIndex==suggestions.size()) selectionIndex=0;
-//			System.out.println(selectionIndex);
-			return;
-		case ' ':
-		case '-':
-		case ',':
-		case '.':
-			useSuggestion((char)c);
-			break;
-		}
-		String text=getText();
-		if (text!=null && text.length()>0){
-			if (text.endsWith(" ")) {
+		char keyChar = e.getKeyChar();
+		if (keyChar == KeyEvent.CHAR_UNDEFINED) {
+			int keyCode = e.getKeyCode();
+			switch (keyCode) {
+			case 38: // up
+				suggestionList.requestFocus();
+				selectionIndex--;
+				if (selectionIndex < 0) selectionIndex = suggestions.size() - 1;
+				break;
+			case 40: // down
+				suggestionList.requestFocus();
+				selectionIndex++;
+				if (selectionIndex == suggestions.size()) selectionIndex = 0;
+				break;
+			}
+		} else {
+			if (selectionIndex < 0) {
 				hidePopup();
-				String newWord=trim(lastWord(text));
-				dictionary.add(newWord);
 			} else {
-				suggestFor(lastWord(text));		
+				useSuggestion(keyChar);
+			}
+			String text = getText();
+			if (text.length() > 0) {
+				char lastChar = text.charAt(text.length() - 1);
+				String lastword = lastWord(text);
+				if (Character.isLetter(lastChar)) {
+					suggestFor(lastword);
+				} else {
+					if (lastword.length() > 2) {
+						dictionary.add(lastword);
+					}
+				}
 			}
 		}
+		if (getCaretPosition() < getText().length()) {
+			hidePopup();
+		}
 	}
-	
-	public void keyTyped(KeyEvent e) {
+
+	public void keyTyped(KeyEvent e) {}
+
+	private void hidePopup() {
+		suggestionList.setVisible(false);
 	}
-	private void hidePopup(){
-		suggestionList.setVisible(false);		
-	}
-	
+
 	private String lastWord(String text) {
-		int pos=text.trim().lastIndexOf(' ');
-		if (pos>0) return text.substring(pos).trim();
-		return text.trim();
+		if (text == null) return null;
+		text = trim(text);
+		int i = text.length();
+		if (i < 1) return null;
+		while (i-- > 1) {
+			char c = text.charAt(i - 1);
+			if (!Character.isLetter(c) && c != '-') {
+				break;
+			}
+		}
+		return text.substring(i).trim();
+	}
+
+	private String trim(String text) {
+		int i = text.length() - 1;
+		while (i >= 0) {
+			if (Character.isLetter(text.charAt(i))) break;
+			i--;
+		}
+		return text.substring(0, i + 1);
 	}
 
 	private void loadSuggestions(boolean ignoreCase) throws IOException {
-		dictionary=new PrefixTree(ignoreCase);
-		if (dictionaryFile.exists()){
+		dictionary = new PrefixTree(ignoreCase);
+		if (dictionaryFile.exists()) {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictionaryFile), charset));
-	    String line = null;
-	    while ((line = br.readLine()) != null) dictionary.add(line);
-	    br.close();
+			String line = null;
+			while ((line = br.readLine()) != null)
+				dictionary.add(line);
+			br.close();
 		}
 	}
 
 	private void suggestFor(String text) {
-		TreeMap<Integer,Vector<String>> map=new TreeMap<Integer, Vector<String>>(); // maps from lengths l to suggestions with length l
+		if (text == null) {
+			return;
+		}
+		TreeMap<Integer, Vector<String>> map = new TreeMap<Integer, Vector<String>>(); // maps from lengths l to suggestions with length l
 		suggestions = dictionary.get(text);
-		int minLength=text.length()+1;
-		for (String suggestion:suggestions){
-			suggestion=suggestion.trim();
-			int len=suggestion.length();
-			if (len<minLength) continue;
+		int minLength = text.length() + 1;
+		for (String suggestion : suggestions) {
+			suggestion = suggestion.trim();
+			int len = suggestion.length();
+			if (len < minLength) continue;
 			Vector<String> list = map.get(len);
-			if (list==null) {
-				list=new Vector<String>();
+			if (list == null) {
+				list = new Vector<String>();
 				map.put(len, list);
 			}
 			list.add(suggestion);
 		}
 
-		TreeSet<String> filtered=Tools.stringSet();
-		for (Vector<String>suggestionsOfSameLength:map.values()){
-			for (String s:suggestionsOfSameLength){
+		TreeSet<String> filtered = Tools.stringSet();
+		for (Vector<String> suggestionsOfSameLength : map.values()) {
+			for (String s : suggestionsOfSameLength) {
 				filtered.add(s);
-				if (filtered.size()>=maxNumberOfSuggestions) break;
+				if (filtered.size() >= maxNumberOfSuggestions) break;
 			}
-			if (filtered.size()>=maxNumberOfSuggestions) break;
+			if (filtered.size() >= maxNumberOfSuggestions) break;
 		}
-		
+
 		suggestions.clear();
 		suggestions.addAll(filtered);
 
-		
-		if (suggestions.isEmpty()){
+		if (suggestions.isEmpty()) {
 			hidePopup();
 		} else {
 			suggestionList.removeAll();
-			for (String suggestion:suggestions)	{
-				JMenuItem item = new JMenuItem(text+suggestion.substring(text.length()));
+			for (String suggestion : suggestions) {
+				JMenuItem item = new JMenuItem(text + suggestion.substring(text.length()));
 				item.addActionListener(this);
 				item.addKeyListener(this);
 				suggestionList.add(item);
 			}
-			selectionIndex=-1;
+			selectionIndex = -1;
 			pos = getCaret().getMagicCaretPosition();
-			suggestionList.show(this, pos.x-10, pos.y+20);
-		}
-	}
-	
-	private String trim(String lastWord) {
-		boolean changed=true;
-		while (changed){
-			changed=false;
-			if (lastWord.endsWith("\\n")) lastWord=lastWord.substring(0,lastWord.length()-2);
-			if (lastWord.endsWith("?") ||
-					lastWord.endsWith("!") ||
-					lastWord.endsWith(".") ||
-					lastWord.endsWith(",") ||
-					lastWord.endsWith(";") ||
-					lastWord.endsWith(":") ||
-					lastWord.endsWith(")") ||
-					lastWord.endsWith("]") ||
-					lastWord.endsWith("}")) {
-				lastWord=lastWord.substring(0, lastWord.length()-1);
-				changed=true;
+			if (pos != null) {
+				suggestionList.show(this, pos.x - 10, pos.y + 20);
 			}
-			lastWord=lastWord.trim();
 		}
-		return lastWord;
 	}
 
 	private void useSuggestion(char c) {
 		if (!suggestionList.isVisible()) return;
-		if (selectionIndex>-1){
-			String text=getText();
-			text=text.substring(0, text.length()-1);
-			int len=lastWord(text).length();
-			String ins=suggestions.get(selectionIndex).substring(len)+c;
-			setText(text+ins);
+		if (selectionIndex > -1) {
+			String text = getText();
+			text = text.substring(0, text.length() - 1);
+			int len = lastWord(text).length();
+			String ins = suggestions.get(selectionIndex).substring(len) + c;
+			setText(text + ins);
 			hidePopup();
 		}
 	}
