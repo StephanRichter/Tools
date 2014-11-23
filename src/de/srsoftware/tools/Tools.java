@@ -686,11 +686,16 @@ public class Tools {
 	 */
 	public static URL showSelectFileDialog(String title, String fileName, GenericFileFilter fileType, Component owner) {
 		if (fileName == null) fileName = lastSelectedFile;
-		URL result = null;
+		URL result = null;		
 		JFileChooser FileDialog = new JFileChooser();
 		FileDialog.setDialogTitle(title);
-		FileDialog.setFileFilter(fileType);
-		FileDialog.setSelectedFile(new File(fileName));
+		if (fileType instanceof DirectoryFilter){
+			FileDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			System.out.println("directories!");
+		} else {
+			FileDialog.setFileFilter(fileType);
+			FileDialog.setSelectedFile(new File(fileName));
+		}
 		int returnVal = FileDialog.showOpenDialog(owner);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			try {
