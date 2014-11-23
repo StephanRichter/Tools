@@ -117,9 +117,16 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	}
 
 	private String lastWord(String text) {
-		int pos = text.trim().lastIndexOf(' ');
-		if (pos > 0) return text.substring(pos).trim();
-		return text.trim();
+		text=text.trim();
+		int i=text.length();
+		
+		while (i-->1){
+			char c=text.charAt(i-1);
+			if (!Character.isLetter(c)){
+				break;
+			}
+		}
+		return text.substring(i).trim();
 	}
 
 	private void loadSuggestions(boolean ignoreCase) throws IOException {
