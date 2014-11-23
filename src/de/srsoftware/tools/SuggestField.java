@@ -99,14 +99,14 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 			} else {
 				useSuggestion(keyChar);
 			}
-			String text=getText();
-			if (text.length()>0) {
-				char lastChar=text.charAt(text.length()-1);
+			String text = getText();
+			if (text.length() > 0) {
+				char lastChar = text.charAt(text.length() - 1);
 				String lastword = lastWord(text);
-				if (lastword.length()>1){
-					if (Character.isLetter(lastChar)){
-						suggestFor(lastword);		
-					} else {
+				if (Character.isLetter(lastChar)) {
+					suggestFor(lastword);
+				} else {
+					if (lastword.length() > 2) {
 						dictionary.add(lastword);
 					}
 				}
@@ -124,12 +124,12 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	}
 
 	private String lastWord(String text) {
-		if (text==null) return null;
-		text = trim(text);	
+		if (text == null) return null;
+		text = trim(text);
 		int i = text.length();
-		if (i<1) return null;
+		if (i < 1) return null;
 		while (i-- > 1) {
-			char c = text.charAt(i-1);
+			char c = text.charAt(i - 1);
 			if (!Character.isLetter(c) && c != '-') {
 				break;
 			}
@@ -137,13 +137,13 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		return text.substring(i).trim();
 	}
 
-	private String trim(String text) {		
-		int i=text.length()-1;
-		while (i>=0){
+	private String trim(String text) {
+		int i = text.length() - 1;
+		while (i >= 0) {
 			if (Character.isLetter(text.charAt(i))) break;
 			i--;
 		}
-		return text.substring(0,i+1);
+		return text.substring(0, i + 1);
 	}
 
 	private void loadSuggestions(boolean ignoreCase) throws IOException {
@@ -158,7 +158,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	}
 
 	private void suggestFor(String text) {
-		if (text==null){
+		if (text == null) {
 			return;
 		}
 		TreeMap<Integer, Vector<String>> map = new TreeMap<Integer, Vector<String>>(); // maps from lengths l to suggestions with length l
