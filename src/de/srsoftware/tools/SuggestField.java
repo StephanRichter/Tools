@@ -61,7 +61,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		}
 		addKeyListener(this);
 		suggestionList = new JPopupMenu();
-		//suggestionList.addKeyListener(this);
+		// suggestionList.addKeyListener(this);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -75,58 +75,52 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		}
 	}
 
-	public void keyPressed(KeyEvent e) {
-	}
+	public void keyPressed(KeyEvent e) {}
 
 	public void keyReleased(KeyEvent e) {
-		System.out.println("key released:"+e);
 		char keyChar = e.getKeyChar();
-		if (keyChar == KeyEvent.CHAR_UNDEFINED){
+		if (keyChar == KeyEvent.CHAR_UNDEFINED) {
 			int keyCode = e.getKeyCode();
-			switch (keyCode){
+			switch (keyCode) {
 			case 38: // up
 				suggestionList.requestFocus();
 				selectionIndex--;
-				if (selectionIndex<0) selectionIndex=suggestions.size()-1;
+				if (selectionIndex < 0) selectionIndex = suggestions.size() - 1;
 				break;
 			case 40: // down
 				suggestionList.requestFocus();
 				selectionIndex++;
-				if (selectionIndex==suggestions.size()) selectionIndex=0;
+				if (selectionIndex == suggestions.size()) selectionIndex = 0;
 				break;
 			}
 		} else {
-			if (selectionIndex<0){
+			if (selectionIndex < 0) {
 				hidePopup();
 			} else {
 				useSuggestion(keyChar);
 			}
-
-				System.out.println(keyChar+"/"+(int)keyChar);
-				System.out.println("index: "+selectionIndex);
-				String lastword=lastWord(getText());
-				suggestFor(lastword);
+			String lastword = lastWord(getText());
+			suggestFor(lastword);
 		}
-		if (getCaretPosition()<getText().length()){
+		if (getCaretPosition() < getText().length()) {
 			hidePopup();
 		}
 	}
 
-	public void keyTyped(KeyEvent e) {
-	}
-	
+	public void keyTyped(KeyEvent e) {}
 
 	private void hidePopup() {
 		suggestionList.setVisible(false);
 	}
 
 	private String lastWord(String text) {
-		text=text.trim();
-		int i=text.length();
-		
-		while (i-->1){
-			char c=text.charAt(i-1);
-			if (!Character.isLetter(c) && c!='-'){
+		if (text==null) return null;
+		text = text.trim();		
+		int i = text.length();
+		if (i<1) return null;
+		while (i-- > 1) {
+			char c = text.charAt(i - 1);
+			if (!Character.isLetter(c) && c != '-') {
 				break;
 			}
 		}
@@ -145,6 +139,9 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	}
 
 	private void suggestFor(String text) {
+		if (text==null){
+			return;
+		}
 		TreeMap<Integer, Vector<String>> map = new TreeMap<Integer, Vector<String>>(); // maps from lengths l to suggestions with length l
 		suggestions = dictionary.get(text);
 		int minLength = text.length() + 1;
@@ -191,7 +188,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 	}
 
 	private void useSuggestion(char c) {
-		System.out.println("useSuggestion("+c+")");
+		System.out.println("useSuggestion(" + c + ")");
 		if (!suggestionList.isVisible()) return;
 		if (selectionIndex > -1) {
 			String text = getText();
