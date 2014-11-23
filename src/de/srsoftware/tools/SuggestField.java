@@ -137,7 +137,7 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 		if (i < 1) return null;
 		while (i-- > 1) {
 			char c = text.charAt(i - 1);
-			if (!Character.isLetter(c) && c != '-') {
+			if (!Character.isLetter(c) && c != '-' && c != '\'') {
 				if (c=='\\'){
 					i--;
 				}
