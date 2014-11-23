@@ -95,9 +95,6 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 				if (selectionIndex==suggestions.size()) selectionIndex=0;
 				break;
 			}
-			if (getCaretPosition()<getText().length()){
-				hidePopup();
-			}
 		} else {
 			if (selectionIndex<0){
 				hidePopup();
@@ -109,6 +106,9 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 				System.out.println("index: "+selectionIndex);
 				String lastword=lastWord(getText());
 				suggestFor(lastword);
+		}
+		if (getCaretPosition()<getText().length()){
+			hidePopup();
 		}
 	}
 
