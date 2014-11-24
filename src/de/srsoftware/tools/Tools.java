@@ -702,20 +702,17 @@ public class Tools {
 				result = new URL("file:" + FileDialog.getSelectedFile().getPath());
 				lastSelectedFile = FileDialog.getSelectedFile().getPath();
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				System.out.println(_("The given text is not a valid URL!"));
 			}
 		}
 		return result;
 	}
 
-	public static URL showUrlInputDialog(Component owner, String text) {
-		// TODO Auto-generated method stub
+	public static URL showUrlInputDialog(Component owner, String text, String preset) {
 		URL result = null;
 		try {
-			result = new URL(JOptionPane.showInputDialog(owner, text, ""));
+			result = new URL(JOptionPane.showInputDialog(owner, text, preset));
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			System.out.println(_("The given text is not a valid URL!"));
 		}
 		return result;
