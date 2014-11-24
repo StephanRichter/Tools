@@ -79,7 +79,6 @@ public class SuggestField extends JTextField implements KeyListener, ActionListe
 
 	public void keyReleased(KeyEvent e) {
 		char keyChar = e.getKeyChar();
-		System.out.println(e);
 		if (keyChar == KeyEvent.CHAR_UNDEFINED) {
 			int keyCode = e.getKeyCode();
 			switch (keyCode) {
