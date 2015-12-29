@@ -1,0 +1,3 @@
+[submodule "libs/Translations"]
+	path = libs/Translations
+	url = https://github.com/StephanRichter/Translations
