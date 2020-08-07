@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import de.srsoftware.tools.translations.Translations;
+import de.keawe.tools.translations.Translation;
 
 /**
  * stellt ein grafisches Programmelement zur Verfügung, dass einen kleinen, aus Buttons bestehenden Kalender darstellt, aus dem ein Tag gewählt werden kann.
@@ -28,7 +28,7 @@ import de.srsoftware.tools.translations.Translations;
 public class DateChooser extends JPanel implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 8240006199572579622L;
 	private static String _(String text) { 
-		return Translations.get(text);
+		return Translation.get(DateChooser.class,text);
 	}
 	private Vector<JButton> dateButtons = new Vector<JButton>(); // für jeden Tag im Monat und die Überlappungen wird später je ein Button erzeugt, diese Buttons werden in der Liste verwaltet
 	private TreeSet<ActionListener> actionListeners = new TreeSet<ActionListener>(); // die Menge der Objekte, die für eine Benachrichtigung über DatumÄnderiungen vorgesehen sind

@@ -2,7 +2,7 @@ package de.srsoftware.tools;
 /** This class provides services to handle filenames, such as absolute-relative path conversion **/
 import java.io.File;
 
-import de.srsoftware.tools.translations.Translations;
+import de.keawe.tools.translations.Translation;
 public class FileName{
   /**
   * sucht nach der Datei &lt;filename&gt; in allen Unterverzeichnissen des angegebenen Pfades
@@ -19,7 +19,7 @@ public class FileName{
   * The filname including a path, if successfull, null otherwise
   **/
   public static String searchFileUpward(String filename,int levels){
-    System.out.print(_("searching for file #",filename));
+    System.out.print(Translation.get(FileName.class,"searching for file {}",filename));
     FileName f=new FileName(filename);
     String dir=f.getPathNameFromPath();
     int i=dir.lastIndexOf(sc);
@@ -35,10 +35,6 @@ public class FileName{
     System.out.println();
     return result;
   };
-
-  private static String _(String key, Object insert) {
-		return Translations.get(key, insert);
-	}
 
   /** extracts the equal part of the given paths **/
   private static String getPathMatch(String path1, String path2){

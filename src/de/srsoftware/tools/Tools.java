@@ -1,4 +1,5 @@
 package de.srsoftware.tools;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -25,26 +26,27 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import de.srsoftware.tools.translations.Translations;
+import de.keawe.tools.translations.Translation;
 
 public class Tools {
 	public static String lastSelectedFile = ""; // speichert, welche Datei zuletzt mit einem Dialog geöffnet wurde, um beim nächsten Aufruf des Dialogs im gleichen Ordner zu starten
 	public static TreeSet<String> oldMessages = new TreeSet<String>();
 	private static JFileChooser FileDialog;
 	private static long searchTime = 0;
-	public static String language="German";
+	public static String language = "German";
 
 	public static Color colorComplement(Color bg) {
-		//int min=Math.min(bg.getRed(), Math.min(bg.getGreen(), bg.getBlue()));
-		//int max=Math.max(bg.getRed(), Math.max(bg.getGreen(), bg.getBlue()));
-		//max+=min;
-		int treshold=200;
-		int red=(bg.getRed()>treshold)?0:255;
-		int green=(bg.getGreen()>treshold)?0:255;
-		int blue=(bg.getBlue()>treshold)?0:255;
-		return new Color(red,green,blue);
-		//		return new Color(max-bg.getRed(),max-bg.getGreen(),max-bg.getBlue());
+		// int min=Math.min(bg.getRed(), Math.min(bg.getGreen(), bg.getBlue()));
+		// int max=Math.max(bg.getRed(), Math.max(bg.getGreen(), bg.getBlue()));
+		// max+=min;
+		int treshold = 200;
+		int red = (bg.getRed() > treshold) ? 0 : 255;
+		int green = (bg.getGreen() > treshold) ? 0 : 255;
+		int blue = (bg.getBlue() > treshold) ? 0 : 255;
+		return new Color(red, green, blue);
+		// return new Color(max-bg.getRed(),max-bg.getGreen(),max-bg.getBlue());
 	}
+
 	public static String colorToString(Color c) {
 		String dummy = Integer.toHexString(c.getBlue());
 		if (dummy.length() < 2) dummy = "0" + dummy;
@@ -59,6 +61,7 @@ public class Tools {
 
 		return "$00" + result.toUpperCase();
 	}
+
 	public static String colorToXmlString(Color c) {
 		String dummy = Integer.toHexString(c.getRed());
 		if (dummy.length() < 2) dummy = "0" + dummy;
@@ -75,9 +78,9 @@ public class Tools {
 	}
 
 	public static void createDirectory(String fname) {
-		File f=new File(fname);
-		if (!f.exists()) f.mkdirs();	  
-  }
+		File f = new File(fname);
+		if (!f.exists()) f.mkdirs();
+	}
 
 	public static String deleteNonFilenameChars(String string) {
 		// TODO Auto-generated method stub
@@ -165,7 +168,7 @@ public class Tools {
 	}
 
 	public static void execute(String command) {
-		//System.out.println("execute: " + command);
+		// System.out.println("execute: " + command);
 		if (command.charAt(0) == '"') {
 			int i = command.indexOf('"', 1);
 			command = command.substring(1, i);
@@ -218,10 +221,10 @@ public class Tools {
 			return f.exists();
 		} else {
 			try {
-				System.out.print("Waiting for connection to "+fileUrl+"...");
-				HttpURLConnection connection = (HttpURLConnection)fileUrl.openConnection();
-				int code=connection.getResponseCode();
-				if (code==200) {
+				System.out.print("Waiting for connection to " + fileUrl + "...");
+				HttpURLConnection connection = (HttpURLConnection) fileUrl.openConnection();
+				int code = connection.getResponseCode();
+				if (code == 200) {
 					System.out.println("established.");
 					return true;
 				}
@@ -245,7 +248,7 @@ public class Tools {
 	}
 
 	public static boolean fileIsKeggUrl(URL fileUrl) {
-		String dummy=fileUrl.toString();
+		String dummy = fileUrl.toString();
 		if (dummy.startsWith("http://rest.kegg.jp/get/")) return true;
 		return dummy.startsWith("http://www.genome.jp/dbget-bin");
 	}
@@ -272,7 +275,7 @@ public class Tools {
 				if (subs[i].isDirectory() && dir.toLowerCase().equals(s.toLowerCase())) {
 					s = dir + fileUrl.toString().substring(5 + dir.length());
 					try {
-						//System.out.println("corrected " + s);
+						// System.out.println("corrected " + s);
 						return fixUrl(new URL("file:" + s));
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
@@ -317,6 +320,7 @@ public class Tools {
 				} catch (InterruptedException e) {}
 			}
 		}
+		reader.close();
 		return result.toString();
 	}
 
@@ -386,7 +390,7 @@ public class Tools {
 		}
 		try {
 			result = new URL(calculatedLink);
-		} catch (MalformedURLException e) {			
+		} catch (MalformedURLException e) {
 			String lcs = Tools.lcs(outgoingLink, baseDocument);
 			if (lcs != null && lcs.length() > 0) {
 				outgoingLink = outgoingLink.substring(outgoingLink.lastIndexOf(lcs));
@@ -396,7 +400,7 @@ public class Tools {
 		}
 		if (fileIsLocal(result) && !fileExists(result)) {
 			return guessRightCase(result);
-		}// */
+		} // */
 		return result;
 	}
 
@@ -543,7 +547,7 @@ public class Tools {
 	}
 
 	public static void notImplemented(String method) {
-		System.out.println(_("The method \"#\" has not been implemented, yet.",method));
+		System.out.println(_("The method \"#\" has not been implemented, yet.", method));
 	}
 
 	public static void pause(int secs) {
@@ -557,15 +561,16 @@ public class Tools {
 	}
 
 	public static void printArray(Object[] lines) {
-	  System.out.println(lines+":");
-	  for (int i=0; i<lines.length; i++) System.out.println(lines[i]+" ");
-	  
-  }
+		System.out.println(lines + ":");
+		for (int i = 0; i < lines.length; i++)
+			System.out.println(lines[i] + " ");
+
+	}
 
 	public static void printStack() {
 		try {
 			Thread.dumpStack();
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -590,20 +595,21 @@ public class Tools {
 	}
 
 	public static void recodeFile(URL fileUrl) {
-	// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
 	}
 
 	public static String removeHtml(String line) {
-		int open=line.indexOf("<");
-		while (open>-1){
-			int close=line.indexOf(">",open);
-			if ((close>-1) && (close+1<line.length())){
-				line=line.substring(0,open)+line.substring(close+1);
-			} else line=line.substring(0,open);
-			open=line.indexOf("<");
+		int open = line.indexOf("<");
+		while (open > -1) {
+			int close = line.indexOf(">", open);
+			if ((close > -1) && (close + 1 < line.length())) {
+				line = line.substring(0, open) + line.substring(close + 1);
+			} else
+				line = line.substring(0, open);
+			open = line.indexOf("<");
 		}
-	  return line.replace("&lt;", "<");
-  }
+		return line.replace("&lt;", "<");
+	}
 
 	public static double round(double d, int nachkommastellen) {
 		double factor = Math.pow(10, nachkommastellen);
@@ -611,27 +617,28 @@ public class Tools {
 	}
 
 	public static String saveDialog(Component owner, String title, String filename, GenericFileFilter fileType) {
-		Vector<FileFilter> filter=new Vector<FileFilter>();
+		Vector<FileFilter> filter = new Vector<FileFilter>();
 		filter.add(fileType);
-		return saveDialog(owner,title,filename,filter);
+		return saveDialog(owner, title, filename, filter);
 	}
 
 	public static String saveDialog(Component owner, String title, String filename, Vector<FileFilter> fileFilter) {
-		FileDialog=new JFileChooser();
+		FileDialog = new JFileChooser();
 		FileDialog.setDialogTitle(title);
-		if (fileFilter.size()>0){
-			FileDialog.setFileFilter(fileFilter.get(0));			
-			for (int i=1; i<fileFilter.size(); i++)	FileDialog.addChoosableFileFilter(fileFilter.get(i));
+		if (fileFilter.size() > 0) {
+			FileDialog.setFileFilter(fileFilter.get(0));
+			for (int i = 1; i < fileFilter.size(); i++)
+				FileDialog.addChoosableFileFilter(fileFilter.get(i));
 		}
 		FileDialog.setSelectedFile(new File(filename));
 		int returnVal = FileDialog.showSaveDialog(owner);
 		String result = null;
 		if (returnVal == JFileChooser.APPROVE_OPTION) result = FileDialog.getSelectedFile().getPath();
-		if (result != null){
-			if  (result.equals("nullnull")) {
+		if (result != null) {
+			if (result.equals("nullnull")) {
 				result = null;
-			} else if (result.indexOf('.')<0){
-				result+="."+((GenericFileFilter)FileDialog.getFileFilter()).ending[0];
+			} else if (result.indexOf('.') < 0) {
+				result += "." + ((GenericFileFilter) FileDialog.getFileFilter()).ending[0];
 			}
 		}
 		return result;
@@ -643,7 +650,7 @@ public class Tools {
 
 	public static int screenWidth() {
 		return Toolkit.getDefaultToolkit().getScreenSize().width;
-  }
+	}
 
 	public static URL searchFiles(String[] names, String path) {
 		searchTime = 0;
@@ -670,26 +677,26 @@ public class Tools {
 	}
 
 	public static String shortest(String[] strings) {
-		String result=strings[0];
-		int len=result.length();
-		for (int i=1; i<strings.length; i++){
-			if (strings[i].length()<len){
-				result=strings[i];
-				len=result.length();
+		String result = strings[0];
+		int len = result.length();
+		for (int i = 1; i < strings.length; i++) {
+			if (strings[i].length() < len) {
+				result = strings[i];
+				len = result.length();
 			}
 		}
-	  return result;
-  }
+		return result;
+	}
 
 	/**
 	 * Zeigt einen Datei-Öffnen-Dialog mit Titel <i>title</i>, Startverzeichnis <i>defDir</i> und Dateityp <i>fileType</i> an *
 	 */
 	public static URL showSelectFileDialog(String title, String fileName, GenericFileFilter fileType, Component owner) {
 		if (fileName == null) fileName = lastSelectedFile;
-		URL result = null;		
+		URL result = null;
 		JFileChooser FileDialog = new JFileChooser();
 		FileDialog.setDialogTitle(title);
-		if (fileType instanceof DirectoryFilter){
+		if (fileType instanceof DirectoryFilter) {
 			FileDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			System.out.println("directories!");
 		} else {
@@ -719,22 +726,23 @@ public class Tools {
 	}
 
 	public static String spaces(int i) {
-		StringBuffer sb=new StringBuffer();
-		for (;i>0;i--) sb.append(' ');
-	  return sb.toString();
-  }
+		StringBuffer sb = new StringBuffer();
+		for (; i > 0; i--)
+			sb.append(' ');
+		return sb.toString();
+	}
 
 	public static TreeSet<String> stringSet() {
 		return new TreeSet<String>(ObjectComparator.get());
 	}
 
 	public static void trace(Object source, String method, Object data) {
-		if (source==null){
-			System.out.println("(static) "+method+" => "+data);
+		if (source == null) {
+			System.out.println("(static) " + method + " => " + data);
 		} else {
-			System.out.println(source.getClass().toString().substring(6)+"."+method+" => "+data);
+			System.out.println(source.getClass().toString().substring(6) + "." + method + " => " + data);
 		}
-  }
+	}
 
 	@SuppressWarnings("deprecation")
 	public static String Uhrzeit() {
@@ -742,12 +750,12 @@ public class Tools {
 		return d.toLocaleString();
 	}
 
-	private static String _(String text) { 
-		return Translations.get(text);
+	private static String _(String text) {
+		return Translation.get(Tools.class,text);
 	}
 
 	private static String _(String key, Object insert) {
-		return Translations.get(key, insert);
+		return Translation.get(Tools.class,key, insert);
 	}
 
 	private static void addCharEntity(Integer aIdx, StringBuilder aBuilder) {
@@ -809,7 +817,7 @@ public class Tools {
 	}
 
 	@SuppressWarnings("deprecation")
-  private static URL internSearchFiles(String[] names, String path) {
+	private static URL internSearchFiles(String[] names, String path) {
 		if (checkSearchTime()) {
 			System.out.print(".");
 			File f = new File(path);
@@ -848,24 +856,25 @@ public class Tools {
 	static void windowsExecute(String command) throws IOException {
 		Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + command);
 	}
-	
+
 	public static void openWebpage(URI uri) {
-    Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-        try {
-            desktop.browse(uri);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+			try {
+				desktop.browse(uri);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
+
 	public static void openWebpage(String url) {
 		try {
 			openWebpage((new URL(url)).toURI());
-		} catch (URISyntaxException e){
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
-	    e.printStackTrace();
-    }
-  }
+			e.printStackTrace();
+		}
+	}
 }
