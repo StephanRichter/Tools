@@ -7,6 +7,7 @@
 	<version>1.0.0</version>
 	<name>Tools</name>
 	<description>various helper methods and classes</description>
+	<url>https://github.com/StephanRichter/Tools</url>
 	<organization>
 		<name>SRSoftware</name>
 		<url>https://srsoftware.de</url>
@@ -29,9 +30,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/keawe-software/Translations.git</connection>
-		<developerConnection>scm:git:git@github.com:keawe-software/Translations.git</developerConnection>
-		<url>https://github.com/keawe-software/Translations</url>
+		<connection>scm:git:git://github.com/StephanRichter/Tools.git</connection>
+		<developerConnection>scm:git:git@github.com:StephanRichter/Tools.git</developerConnection>
+		<url>https://github.com/StephanRichter/Tools</url>
 		<tag>HEAD</tag>
 	</scm>
 
