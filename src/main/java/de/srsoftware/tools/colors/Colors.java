@@ -3,7 +3,7 @@ package de.srsoftware.tools.colors;
 import java.awt.Color;
 
 public class Colors {
-	public static Color colorComplement(Color bg) {
+	public static Color component(Color bg) {
 		// int min=Math.min(bg.getRed(), Math.min(bg.getGreen(), bg.getBlue()));
 		// int max=Math.max(bg.getRed(), Math.max(bg.getGreen(), bg.getBlue()));
 		// max+=min;
@@ -15,37 +15,7 @@ public class Colors {
 		// return new Color(max-bg.getRed(),max-bg.getGreen(),max-bg.getBlue());
 	}
 	
-	public static String colorToString(Color c) {
-		String dummy = Integer.toHexString(c.getBlue());
-		if (dummy.length() < 2) dummy = "0" + dummy;
-		String result = dummy;
-		dummy = Integer.toHexString(c.getGreen());
-		if (dummy.length() < 2) dummy = "0" + dummy;
-		result = result + dummy;
-
-		dummy = Integer.toHexString(c.getRed());
-		if (dummy.length() < 2) dummy = "0" + dummy;
-		result = result + dummy;
-
-		return "$00" + result.toUpperCase();
-	}
-
-	public static String colorToXmlString(Color c) {
-		String dummy = Integer.toHexString(c.getRed());
-		if (dummy.length() < 2) dummy = "0" + dummy;
-		String result = dummy;
-		dummy = Integer.toHexString(c.getGreen());
-		if (dummy.length() < 2) dummy = "0" + dummy;
-		result = result + dummy;
-
-		dummy = Integer.toHexString(c.getBlue());
-		if (dummy.length() < 2) dummy = "0" + dummy;
-		result = result + dummy;
-
-		return "#" + result.toUpperCase();
-	}
-	
-	public static Color lookupColor(String name) {
+	public static Color lookup(String name) {
 		if (name.equals("clAqua")) return new Color(0, 255, 255);
 		if (name.equals("clBlack")) return Color.BLACK;
 		if (name.equals("clBlue")) return Color.BLUE;
@@ -63,5 +33,35 @@ public class Colors {
 		if (name.equals("clFuchsia")) return new Color(255, 0, 255);
 		if (name.equals("clWhite")) return Color.WHITE;
 		return Color.BLACK;
+	}
+	
+	public static String toString(Color c) {
+		String dummy = Integer.toHexString(c.getBlue());
+		if (dummy.length() < 2) dummy = "0" + dummy;
+		String result = dummy;
+		dummy = Integer.toHexString(c.getGreen());
+		if (dummy.length() < 2) dummy = "0" + dummy;
+		result = result + dummy;
+
+		dummy = Integer.toHexString(c.getRed());
+		if (dummy.length() < 2) dummy = "0" + dummy;
+		result = result + dummy;
+
+		return "$00" + result.toUpperCase();
+	}
+
+	public static String toXml(Color c) {
+		String dummy = Integer.toHexString(c.getRed());
+		if (dummy.length() < 2) dummy = "0" + dummy;
+		String result = dummy;
+		dummy = Integer.toHexString(c.getGreen());
+		if (dummy.length() < 2) dummy = "0" + dummy;
+		result = result + dummy;
+
+		dummy = Integer.toHexString(c.getBlue());
+		if (dummy.length() < 2) dummy = "0" + dummy;
+		result = result + dummy;
+
+		return "#" + result.toUpperCase();
 	}
 }
