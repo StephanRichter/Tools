@@ -27,7 +27,7 @@ import de.keawe.tools.translations.Translation;
  */
 public class DateChooser extends JPanel implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 8240006199572579622L;
-	private static String _(String text) { 
+	private static String t(String text) { 
 		return Translation.get(DateChooser.class,text);
 	}
 	private Vector<JButton> dateButtons = new Vector<JButton>(); // für jeden Tag im Monat und die Überlappungen wird später je ein Button erzeugt, diese Buttons werden in der Liste verwaltet
@@ -227,13 +227,13 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 	}
 
 	private void addDays() {
-		addDay(_(" Mo"));
-		addDay(_(" Tu"));
-		addDay(_(" We"));
-		addDay(_(" Th"));
-		addDay(_(" Fr"));
-		addDay(_(" Sa"));
-		addDay(_(" Su"));
+		addDay(t(" Mo"));
+		addDay(t(" Tu"));
+		addDay(t(" We"));
+		addDay(t(" Th"));
+		addDay(t(" Fr"));
+		addDay(t(" Sa"));
+		addDay(t(" Su"));
 	}
 
 	/**
@@ -245,29 +245,29 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 	private String getMonth(int month) {
 		switch (month) {
 		case 1:
-			return _("January");
+			return t("January");
 		case 2:
-			return _("February");
+			return t("February");
 		case 3:
-			return _("March");
+			return t("March");
 		case 4:
-			return _("April");
+			return t("April");
 		case 5:
-			return _("May");
+			return t("May");
 		case 6:
-			return _("June");
+			return t("June");
 		case 7:
-			return _("July");
+			return t("July");
 		case 8:
-			return _("August");
+			return t("August");
 		case 9:
-			return _("September");
+			return t("September");
 		case 10:
-			return _("October");
+			return t("October");
 		case 11:
-			return _("November");
+			return t("November");
 		}
-		return _("Dezember");
+		return t("Dezember");
 	}
 
 	/**

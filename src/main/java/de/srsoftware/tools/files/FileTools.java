@@ -103,17 +103,6 @@ public class FileTools {
 		return null;
 	}
 	
-	public static File find(File dir, String filename) {
-		File[] list = dir.listFiles();
-		for (File f : list) {
-			if (f.isDirectory()) {
-				f = find(f,filename);
-				if (f != null) return f;
-			} else if (f.getName().equals(filename)) return f;
-		}
-		return null;
-	}
-	
 	/**
 	 * Tries to read the file denoted by the given URL into a string
 	 * 
