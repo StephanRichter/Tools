@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
@@ -73,8 +72,7 @@ public class FileTools {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
-	private static URL findIntern(String path,String...names) {
+	private static File findIntern(String path,String...names) {
 		if (checkSearchTime()) {
 			File f = new File(path);
 			if (f.exists()) {
@@ -82,17 +80,13 @@ public class FileTools {
 				if (files != null) {
 					for (File file : files) {
 						if (file != null && file.isDirectory()) {
-							URL result = findIntern(file.getPath(),names);
+							File result = findIntern(file.getPath(),names);
 							if (result != null) return result;
 						} else
 							for (String filename : names) {
 								if (file.getName().toLowerCase().equals(filename.toLowerCase())) {
-									try {
-										searchTime = 0;
-										return file.toURL();
-									} catch (MalformedURLException e) {
-										e.printStackTrace();
-									}
+									searchTime = 0;
+									return file;
 								}
 							}
 					}
@@ -153,7 +147,7 @@ public class FileTools {
 		return fileUrl.toString().startsWith("file:");
 	}
 	
-	public static URL searchFiles(String path,String...names) {
+	public static File searchFiles(String path,String...names) {
 		searchTime = 0;
 		return findIntern(path,names);
 	}
