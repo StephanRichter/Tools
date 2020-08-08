@@ -153,7 +153,7 @@ public class FileTools {
 		return fileUrl.toString().startsWith("file:");
 	}
 	
-	public static URL searchFiles(String path,String[] names) {
+	public static URL searchFiles(String path,String...names) {
 		searchTime = 0;
 		return findIntern(path,names);
 	}
