@@ -1,4 +1,4 @@
-package de.srsoftware.tools;
+package de.srsoftware.tools.files;
 
 public class DirectoryFilter extends GenericFileFilter{
 

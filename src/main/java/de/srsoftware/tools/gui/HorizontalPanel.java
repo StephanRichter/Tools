@@ -1,4 +1,4 @@
-package de.srsoftware.tools;
+package de.srsoftware.tools.gui;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;

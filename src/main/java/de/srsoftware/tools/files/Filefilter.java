@@ -1,4 +1,4 @@
-package de.srsoftware.tools;
+package de.srsoftware.tools.files;
 
 import java.io.File;
 import java.io.FileFilter;

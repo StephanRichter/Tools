@@ -1,4 +1,4 @@
-package de.srsoftware.tools;
+package de.srsoftware.tools.files;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -65,7 +65,7 @@ public class FileRecoder {
 	}
 
 	public static boolean recode(URL fileUrl) {
-		if (Tools.fileIsLocal(fileUrl)) {
+		if (FileTools.isLocal(fileUrl)) {
 			String s = fileUrl.toString();
 			s = s.substring(s.indexOf(":") + 1);
 			return recode(s);
