@@ -7,6 +7,17 @@ import java.net.URL;
 import de.srsoftware.tools.files.FileTools;
 
 public class Urls {
+	
+	/**
+	 * @param url
+	 * @return
+	 */
+	public static String filename(URL url) { 
+		if (url == null) return null;
+		String[] parts = url.toString().split("/");
+		return parts[parts.length-1];
+	}
+	
 	public static URL fix(URL fileUrl) {
 		String s = fileUrl.toString();
 		if (!s.startsWith("file:")) return fileUrl;
@@ -51,7 +62,18 @@ public class Urls {
 		return f;
 	}
 	
-
+	/**
+	 * @param url
+	 * @return
+	 */
+	public static String hostname(URL url) {
+		String[] parts = url.toString().split("/");
+		for (String part:parts) {
+			if (part.isEmpty() || part.equals("http:") || part.equals("https:")) continue;
+			return part;
+		}
+		return null;
+	}
 	
 	private static String lcs(String a, String b) {
 		if (a == null || b == null) return "";
