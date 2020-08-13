@@ -170,7 +170,6 @@ public class FileName {
 	}
 	
 	public static String deleteNonFilenameChars(String string) {
-		// TODO Auto-generated method stub
 		return string.replaceAll(":", "").replaceAll("/", "-").replaceAll("\\?", " ").replaceAll(" \\.", ".").replaceAll("\\. ", ".");
 	}
 }

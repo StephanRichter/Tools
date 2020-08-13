@@ -294,11 +294,9 @@ public class Tools {
 	}
 	
 	public static void pause(int secs) {
-		// TODO Auto-generated method stub
 		try {
 			Thread.sleep(1000 * secs);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

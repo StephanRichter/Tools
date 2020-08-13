@@ -15,6 +15,20 @@ public class Colors {
 		// return new Color(max-bg.getRed(),max-bg.getGreen(),max-bg.getBlue());
 	}
 	
+	private static int hexToInt(String hex) {
+		byte[] bytes = hex.getBytes();
+		int result = 0;
+		for (byte b : bytes) {
+			result *= 16;
+			if (b>47 && b<58) {
+				result += b-48;
+			} else if (b>96 && b<103) {
+				result += b-87;
+			} else throw new IllegalArgumentException(hex+" is not a valid hex string!");
+		}
+		return result;
+	}
+	
 	public static Color lookup(String name) {
 		if (name.equals("clAqua")) return new Color(0, 255, 255);
 		if (name.equals("clBlack")) return Color.BLACK;
@@ -35,6 +49,15 @@ public class Colors {
 		return Color.BLACK;
 	}
 	
+	public static Color parse(String hex) {
+		if (hex.startsWith("#")) hex=hex.substring(1);
+		hex = hex.toLowerCase();
+		String r = hex.substring(0, 2);
+		String g = hex.substring(2, 4);
+		String b = hex.substring(4, 6);		
+		return new Color(hexToInt(r)/255f, hexToInt(g)/255f, hexToInt(b)/255f);
+	}
+
 	public static String toString(Color c) {
 		String dummy = Integer.toHexString(c.getBlue());
 		if (dummy.length() < 2) dummy = "0" + dummy;
