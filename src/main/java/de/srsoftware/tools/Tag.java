@@ -14,6 +14,66 @@ public class Tag extends HashMap<String,String>{
 		this.type = type;
 	}
 	
+	public Tag addTo(Tag tag) {
+		tag.children.add(this);
+		return tag;
+		
+	}
+
+	public Tag alt(String txt) {
+		return attr("alt",txt);
+	}
+
+	public Tag attr(String key, String val) {
+		put(key,val);
+		return this;
+	}
+	
+	public Tag attr(String key, int i) {
+		return attr(key,""+i);
+	}
+
+	public Tag clazz(Collection<String> classes) {
+		put("class",String.join(" ", classes));
+		return this;
+	}
+	
+	public Tag clazz(String...classes) {
+		put("class",String.join(" ", classes));
+		return this;
+	}
+
+	public Tag content(String content) {
+		return new Tag(null) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String toString() {
+				return content;
+			}
+		}.addTo(this);
+	}
+
+	public Tag id(String id) {
+		return attr("id",id);
+	}
+	
+	public Tag pos(int x, int y) {
+		return attr("x",x).attr("y", y);
+	}
+
+	public Tag size(int width, int height) {
+		return attr("width",width).attr("height",height);
+	}
+
+	public Tag style(String style) {
+		return attr("style",style);
+	}
+
+	public Tag title(String t) {
+		return attr("title",t);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<"+type);
@@ -29,62 +89,5 @@ public class Tag extends HashMap<String,String>{
 		}
 
 		return sb.toString();
-	}
-	
-
-	public Tag attr(String key, String val) {
-		put(key,val);
-		return this;
-	}
-
-	public Tag id(String id) {
-		return attr("id",id);
-	}
-
-	public Tag clazz(Collection<String> classes) {
-		put("class",String.join(" ", classes));
-		return this;
-	}
-	
-	public Tag clazz(String...classes) {
-		put("class",String.join(" ", classes));
-		return this;
-	}
-
-	public Tag attr(String key, int i) {
-		return attr(key,""+i);
-	}
-
-	public Tag addTo(Tag tag) {
-		tag.children.add(this);
-		return tag;
-		
-	}
-
-	public Tag size(int width, int height) {
-		return attr("width",width).attr("height",height);
-	}
-
-	public Tag style(String style) {
-		return attr("style",style);
-	}
-
-	public Tag pos(int x, int y) {
-		return attr("x",x).attr("y", y);
-	}
-
-	public Tag content(String content) {
-		return new Tag(null) {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String toString() {
-				return content;
-			}
-		}.addTo(this);
-	}
-
-	public Tag alt(String txt) {
-		return attr("alt",txt);
 	}
 }
