@@ -32,6 +32,10 @@ public class Tag extends HashMap<String,String>{
 	public Tag attr(String key, int i) {
 		return attr(key,""+i);
 	}
+	
+	public Vector<Tag> children() {
+		return children;
+	}
 
 	public Tag clazz(Collection<String> classes) {
 		put("class",String.join(" ", classes));
