@@ -62,6 +62,10 @@ public class Tag extends HashMap<String,String>{
 		return attr("id",id);
 	}
 	
+	public boolean is(String type) {
+		return this.type.equalsIgnoreCase(type);
+	}
+	
 	public Tag pos(int x, int y) {
 		return attr("x",x).attr("y", y);
 	}
