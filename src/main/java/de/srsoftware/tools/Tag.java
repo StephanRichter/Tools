@@ -14,8 +14,8 @@ public class Tag extends HashMap<String,String>{
 		this.type = type;
 	}
 	
-	public Tag addTo(Tag tag) {
-		tag.children.add(this);
+	public <T extends Tag> T addTo(T tag) {
+		tag.children().add(this);
 		return tag;
 		
 	}
