@@ -20,16 +20,17 @@ public class Tag extends HashMap<String,String>{
 		
 	}
 
-	public Tag alt(String txt) {
+	public  <T extends Tag> T alt(String txt) {
 		return attr("alt",txt);
 	}
 
-	public Tag attr(String key, String val) {
+	@SuppressWarnings("unchecked")
+	public <T extends Tag> T attr(String key, String val) {
 		put(key,val);
-		return this;
+		return (T) this;
 	}
 	
-	public Tag attr(String key, int i) {
+	public  <T extends Tag> T attr(String key, int i) {
 		return attr(key,""+i);
 	}
 	
@@ -58,7 +59,7 @@ public class Tag extends HashMap<String,String>{
 		}.addTo(this);
 	}
 
-	public Tag id(String id) {
+	public <T extends Tag> T id(String id) {
 		return attr("id",id);
 	}
 	
@@ -66,19 +67,19 @@ public class Tag extends HashMap<String,String>{
 		return this.type.equalsIgnoreCase(type);
 	}
 	
-	public Tag pos(int x, int y) {
+	public <T extends Tag> T pos(int x, int y) {
 		return attr("x",x).attr("y", y);
 	}
 
-	public Tag size(int width, int height) {
+	public <T extends Tag> T size(int width, int height) {
 		return attr("width",width).attr("height",height);
 	}
 
-	public Tag style(String style) {
+	public <T extends Tag> T style(String style) {
 		return attr("style",style);
 	}
 
-	public Tag title(String t) {
+	public <T extends Tag> T title(String t) {
 		return attr("title",t);
 	}
 
