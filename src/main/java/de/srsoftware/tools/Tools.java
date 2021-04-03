@@ -15,7 +15,7 @@ import java.text.StringCharacterIterator;
 import java.util.Date;
 import java.util.TreeSet;
 
-import de.keawe.tools.translations.Translation;
+import de.srsoftware.tools.translations.Translation;
 import de.srsoftware.tools.files.FileName;
 import de.srsoftware.tools.files.FileTools;
 

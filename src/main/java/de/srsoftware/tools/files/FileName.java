@@ -3,7 +3,7 @@ package de.srsoftware.tools.files;
 /** This class provides services to handle filenames, such as absolute-relative path conversion **/
 import java.io.File;
 
-import de.keawe.tools.translations.Translation;
+import de.srsoftware.tools.translations.Translation;
 
 public class FileName {
 	/**

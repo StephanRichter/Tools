@@ -11,7 +11,7 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-import de.keawe.tools.translations.Translation;
+import de.srsoftware.tools.translations.Translation;
 
 public class FileTools {
 	

@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import de.keawe.tools.translations.Translation;
+import de.srsoftware.tools.translations.Translation;
 
 /**
  * stellt ein grafisches Programmelement zur Verfügung, dass einen kleinen, aus Buttons bestehenden Kalender darstellt, aus dem ein Tag gewählt werden kann.

@@ -11,7 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import de.keawe.tools.translations.Translation;
+import de.srsoftware.tools.translations.Translation;
 import de.srsoftware.tools.Tools;
 import de.srsoftware.tools.files.DirectoryFilter;
 import de.srsoftware.tools.files.GenericFileFilter;
