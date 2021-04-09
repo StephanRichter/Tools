@@ -66,7 +66,7 @@ public class Tag extends HashMap<String,String>{
 	}
 	
 	public boolean is(String type) {
-		return this.type.equalsIgnoreCase(type);
+		return this.type != null && this.type.equalsIgnoreCase(type);
 	}
 	
 	public <T extends Tag> T pos(int x, int y) {
@@ -100,5 +100,9 @@ public class Tag extends HashMap<String,String>{
 		}
 
 		return sb.toString();
+	}
+	
+	public String type() {
+		return type;
 	}
 }
