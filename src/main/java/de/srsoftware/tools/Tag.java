@@ -38,14 +38,16 @@ public class Tag extends HashMap<String,String>{
 		return children;
 	}
 
-	public Tag clazz(Collection<String> classes) {
+	@SuppressWarnings("unchecked")
+	public <T extends Tag> T clazz(Collection<String> classes) {
 		put("class",String.join(" ", classes));
-		return this;
+		return (T)this;
 	}
 	
-	public Tag clazz(String...classes) {
+	@SuppressWarnings("unchecked")
+	public <T extends Tag> T clazz(String...classes) {
 		put("class",String.join(" ", classes));
-		return this;
+		return (T)this;
 	}
 
 	public Tag content(String content) {
