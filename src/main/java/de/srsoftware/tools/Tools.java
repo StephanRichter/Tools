@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -394,6 +395,28 @@ public class Tools {
 	public static String Uhrzeit() {
 		Date d = new Date();
 		return d.toLocaleString();
+	}
+
+	public static <T> T unwrap(Object o, String fieldName){
+		if (o == null || fieldName == null || fieldName.isEmpty()) return null;
+		Class<?> clazz = o.getClass();
+		try {
+			Field field;
+			while (true){
+				try {
+					field = clazz.getDeclaredField(fieldName);
+					break;
+				} catch (NoSuchFieldException e) {
+					if (clazz == Object.class) throw e;
+				}
+				clazz = clazz.getSuperclass();
+			}
+			field.setAccessible(true);
+			return (T) field.get(o);
+		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	static void windowsExecute(String command) throws IOException {
