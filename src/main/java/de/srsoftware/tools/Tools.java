@@ -397,6 +397,7 @@ public class Tools {
 		return d.toLocaleString();
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> T unwrap(Object o, String fieldName){
 		if (o == null || fieldName == null || fieldName.isEmpty()) return null;
 		Class<?> clazz = o.getClass();

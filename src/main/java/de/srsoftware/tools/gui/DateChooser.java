@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import de.srsoftware.tools.translations.Translation;
 
@@ -31,7 +32,7 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 		return Translation.get(DateChooser.class,text);
 	}
 	private Vector<JButton> dateButtons = new Vector<JButton>(); // für jeden Tag im Monat und die Überlappungen wird später je ein Button erzeugt, diese Buttons werden in der Liste verwaltet
-	private TreeSet<ActionListener> actionListeners = new TreeSet<ActionListener>(); // die Menge der Objekte, die für eine Benachrichtigung über DatumÄnderiungen vorgesehen sind
+	private HashSet<ActionListener> actionListeners = new HashSet<ActionListener>(); // die Menge der Objekte, die für eine Benachrichtigung über DatumÄnderiungen vorgesehen sind
 	private JButton selectedButton = null;// speichert einen Zeiger auf den aktuell ausgewählten Button
 	private JPanel buttonPanel, yearPanel; // Gruppieren die Tages-Auswahl-Buttons sowie die Buttonf für das Jahr
 	private JLabel yearLabel, monthLabel; // Textfelder für die Anzeige des augewählten Jahres und Monats
@@ -223,17 +224,18 @@ public class DateChooser extends JPanel implements ActionListener, MouseListener
 
 	private void addDay(String d) {
 		JLabel l = new JLabel(d);
+		l.setHorizontalAlignment(SwingConstants.CENTER);
 		buttonPanel.add(l);
 	}
 
 	private void addDays() {
-		addDay(t(" Mo"));
-		addDay(t(" Tu"));
-		addDay(t(" We"));
-		addDay(t(" Th"));
-		addDay(t(" Fr"));
-		addDay(t(" Sa"));
-		addDay(t(" Su"));
+		addDay(t("Mo"));
+		addDay(t("Tu"));
+		addDay(t("We"));
+		addDay(t("Th"));
+		addDay(t("Fr"));
+		addDay(t("Sa"));
+		addDay(t("Su"));
 	}
 
 	/**
