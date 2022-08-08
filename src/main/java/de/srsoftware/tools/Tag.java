@@ -15,7 +15,7 @@ public class Tag extends HashMap<String,String>{
 	}
 	
 	public Tag add(Tag tag) {
-		if (tag != null) tag.children().add(tag);
+		if (tag != null) children().add(tag);
 		return this;
 	}
 	
